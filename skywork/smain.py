@@ -96,11 +96,11 @@ def parsing_data(data):
     print(bandId)
     if startorfinish == '1': # '1' 
         print('start')
-        cursor.execute(sql_findName,bandId) 
-        result = cursor.fetchall()
-        df = pd.DataFrame(result)
-        user_name = df.iloc[0,0]
-        print(user_name)
+        #cursor.execute(sql_findName,bandId) 
+        #result = cursor.fetchall()
+        #df = pd.DataFrame(result)
+        #user_name = df.iloc[0,0]
+        #print(user_name)
         print(ct)
         cursor.execute(sql_sw_total_s_insert,(bandId, ct)) 
         board_db.commit()
@@ -109,11 +109,11 @@ def parsing_data(data):
 
     else:
         print('finish')
-        cursor.execute(sql_findName,bandId) 
-        result = cursor.fetchall()
-        df = pd.DataFrame(result)
-        user_name = df.iloc[0,0]
-        print(user_name)
+        #cursor.execute(sql_findName,bandId) 
+        #result = cursor.fetchall()
+        #df = pd.DataFrame(result)
+        #user_name = df.iloc[0,0]
+        #print(user_name)
         print(ct)
         finish_time = datetime.datetime.strptime(ct,'%Y-%m-%d %H:%M:%S')
         start_time = datetime.datetime.strptime(dicTime[bandId],'%Y-%m-%d %H:%M:%S')
@@ -150,8 +150,12 @@ def readThread(ser):
 
             #print(cnt)
             if c == 69 and cnt == 20: #라인의 끝을 만나면.. 'E'
-                #데이터 처리 함수로 호출
-                parsing_data(line)
+                if len(line) == 20:
+                    #데이터 처리 함수로 호출
+                    parsing_data(line)
+                else:
+                    print(len(line))
+                    parsing_data(line[-20:])
 
                 #line 변수 초기화
                 del line[:]   
