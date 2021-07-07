@@ -45,6 +45,11 @@ dicBand = {
     "46CAA22E":"user10"
 }
 
+dicStartTime = {}
+dicFinishTime = {}
+dicTagCnt = {}
+dicTagScore = {}
+dicLabTime = {}
 
 dicScore = {
     "1":"S",
@@ -72,6 +77,11 @@ sql_sw_score_update = "update sw_score set log_name = %s, log_score = %s"
 
 
 sql_climbing_init = "UPDATE climbing_score SET `item161_score` = '0', `item061_score` = '0', `item111_score` = '0', `item011_score` = '0', `user20_name` = 'user20', `user10_name` = 'user10', `user15_name` = 'user15', `user05_name` = 'user5', `user19_name` = 'user19', `user09_name` = 'user9', `user14_name` = 'user14', `user04_name` = 'user4', `item201_score` = '0', `item101_score` = '0', `item151_score` = '0', `item051_score` = '0', `user18_name` = 'user18', `user08_name` = 'user8', `user13_name` = 'user13', `user03_name` = 'user3', `item202_score` = '0', `item102_score` = '0', `item152_score` = '0', `item052_score` = '0', `item191_score` = '0', `item091_score` = '0', `item141_score` = '0', `item041_score` = '0', `item203_score` = '0', `item103_score` = '0', `item153_score` = '0', `item053_score` = '0', `user17_name` = 'user17', `user07_name` = 'user7', `user12_name` = 'user12', `user02_name` = 'user2', `item204_score` = '0', `item104_score` = '0', `item154_score` = '0', `item054_score` = '0', `item192_score` = '0', `item092_score` = '0', `item142_score` = '0', `item042_score` = '0', `item205_score` = '0', `item105_score` = '0', `item155_score` = '0', `item055_score` = '0', `item181_score` = '0', `item081_score` = '0', `item131_score` = '0', `item031_score` = '0', `item193_score` = '0', `item093_score` = '0', `item143_score` = '0', `item043_score` = '0', `user16_name` = 'user16', `user06_name` = 'user6', `user11_name` = 'user11', `user01_name` = 'user1', `item194_score` = '0', `item094_score` = '0', `item144_score` = '0', `item044_score` = '0', `item182_score` = '0', `item082_score` = '0', `item132_score` = '0', `item032_score` = '0', `item195_score` = '0', `item095_score` = '0', `item145_score` = '0', `item045_score` = '0', `item171_score` = '0', `item071_score` = '0', `item121_score` = '0', `item021_score` = '0', `item184_score` = '0', `item084_score` = '0', `item134_score` = '0', `item034_score` = '0', `item172_score` = '0', `item072_score` = '0', `item122_score` = '0', `item022_score` = '0', `item185_score` = '0', `item085_score` = '0', `item135_score` = '0', `item035_score` = '0', `item162_score` = '0', `item062_score` = '0', `item112_score` = '0', `item012_score` = '0', `item173_score` = '0', `item073_score` = '0', `item123_score` = '0', `item023_score` = '0', `item163_score` = '0', `item063_score` = '0', `item113_score` = '0', `item013_score` = '0', `item174_score` = '0', `item074_score` = '0', `item124_score` = '0', `item024_score` = '0', `item164_score` = '0', `item064_score` = '0', `item114_score` = '0', `item014_score` = '0', `item175_score` = '0', `item075_score` = '0', `item125_score` = '0', `item025_score` = '0', `item165_score` = '0', `item065_score` = '0', `item115_score` = '0', `item015_score` = '0', `item183_score` = '0', `item083_score` = '0', `item133_score` = '0'"
+
+sql_sp_total_insert = "insert into sp_score_total (log_name, log_phone, log_time, log_tag_type, log_tag_num) VALUES (%s, %s, %s, %s, %s)"  
+
+sql_sp_score_left_update = "UPDATE sp_score_left SET log_name=%s, log_sp_cnt=%s, log_sp_score=%s, log_sp_time=%s" 
+sql_sp_score_right_update = "UPDATE sp_score_left SET log_name=%s, log_sp_cnt=%s, log_sp_score=%s, log_sp_time=%s" 
 
 sql_climbing_total_logtime_insert = "insert into climbing_score_total (log_time, log_name) VALUES (%s, %s)"  
 #sql_climbing_total_item1s_insert = "insert into climbing_score_total (log_name, log_item1_s) VALUES (%s, %s) where = %s" 
@@ -248,396 +258,71 @@ def parsing_data(data):
     print(itemNo)
     print(bandId)
     
-    if startorfinish == '7':
-        print('Enter')
-        global entryCnt
-        entryCnt += 1
-        if entryCnt <= 20:
-            if entryCnt == 1:
-                global ct_global
-                dicTime['logTime'] = ct
-                ct_global = ct
-                cursor.execute(sql_climbing_user1_update,bandId) 
-            elif entryCnt == 2:
-                cursor.execute(sql_climbing_user2_update,bandId) 
-            elif entryCnt == 3:
-                cursor.execute(sql_climbing_user3_update,bandId) 
-            elif entryCnt == 4:
-                cursor.execute(sql_climbing_user4_update,bandId) 
-            elif entryCnt == 5:
-                cursor.execute(sql_climbing_user5_update,bandId) 
-            elif entryCnt == 6:
-                cursor.execute(sql_climbing_user6_update,bandId) 
-            elif entryCnt == 7:
-                cursor.execute(sql_climbing_user7_update,bandId) 
-            elif entryCnt == 8:
-                cursor.execute(sql_climbing_user8_update,bandId) 
-            elif entryCnt == 9:
-                cursor.execute(sql_climbing_user9_update,bandId) 
-            elif entryCnt == 10:
-                cursor.execute(sql_climbing_user10_update,bandId) 
-            elif entryCnt == 11:
-                cursor.execute(sql_climbing_user11_update,bandId) 
-            elif entryCnt == 12:
-                cursor.execute(sql_climbing_user12_update,bandId) 
-            elif entryCnt == 13:
-                cursor.execute(sql_climbing_user13_update,bandId) 
-            elif entryCnt == 14:
-                cursor.execute(sql_climbing_user14_update,bandId) 
-            elif entryCnt == 15:
-                cursor.execute(sql_climbing_user15_update,bandId) 
-            elif entryCnt == 16:
-                cursor.execute(sql_climbing_user16_update,bandId) 
-            elif entryCnt == 17:
-                cursor.execute(sql_climbing_user17_update,bandId) 
-            elif entryCnt == 18:
-                cursor.execute(sql_climbing_user18_update,bandId) 
-            elif entryCnt == 19:
-                cursor.execute(sql_climbing_user19_update,bandId) 
-            else:
-                cursor.execute(sql_climbing_user20_update,bandId) 
-            
-            board_db.commit()
 
-            cursor.execute(sql_climbing_total_logtime_insert,(ct_global, bandId)) 
-            board_db.commit()
-            print(dicTime)
-
-
-    elif startorfinish == '1': # '1' 
+    if startorfinish == '1': # '1' 
         print('start')
-        if entryCnt == 0:
-            print("Entry 0")
-            return
+
         #cursor.execute(sql_findName,bandId) 
         #result = cursor.fetchall()
         #df = pd.DataFrame(result)
         #user_name = df.iloc[0,0]
         #print(user_name)
 
-        dicTime[bandId] = ct
+        dicStartTime[bandId] = ct
+        dicTagCnt[bandId] = 0
+        dicTagScore[bandId] = 0
+        dicLabTime[bandId] = 0
         print(ct)
-        print(dicTime)
-        print(entryCnt)
+        print(dicStartTime)
 
-        logTime = datetime.datetime.strptime(dicTime['logTime'],'%Y-%m-%d %H:%M:%S')
-
-        print(type(logTime))
-        if itemNo == '001':
-            cursor.execute(sql_climbing_total_item1s_insert,(ct, logTime, bandId)) 
-        elif itemNo == '002':
-            cursor.execute(sql_climbing_total_item2s_insert,(ct, logTime, bandId)) 
-        elif itemNo == '003':
-            cursor.execute(sql_climbing_total_item3s_insert,(ct, logTime, bandId)) 
-        elif itemNo == '004':
-            cursor.execute(sql_climbing_total_item4s_insert,(ct, logTime, bandId)) 
-        elif itemNo == '005':
-            cursor.execute(sql_climbing_total_item4s_insert,(ct, logTime, bandId)) 
-        else:
-            cursor.execute(sql_climbing_total_item5s_insert,(ct, logTime, bandId)) 
+        cursor.execute(sql_sp_total_insert,(bandId, "0000", ct, startorfinish, itemNo)) 
         board_db.commit()
-        dicTime[bandId]=ct
-        print(dicTime)
 
-    else:
+    elif startorfinish == '9':
         print('finish')
 
-        if entryCnt == 0:
-            print("Entry 0")
-            return
-
-        #cursor.execute(sql_findName,bandId) 
-        #result = cursor.fetchall()
-        #df = pd.DataFrame(result)
-        #user_name = df.iloc[0,0]
-        #print(user_name)
-        
+        dicFinishTime[bandId] = ct
         print(ct)
-        logTime = datetime.datetime.strptime(dicTime['logTime'],'%Y-%m-%d %H:%M:%S')
-        finish_time = datetime.datetime.strptime(ct,'%Y-%m-%d %H:%M:%S')
-        start_time = datetime.datetime.strptime(dicTime[bandId],'%Y-%m-%d %H:%M:%S')
-        score = finish_time - start_time
-        print(score)
-        print(finish_time, start_time, score)
-        if itemNo == '001':
-            cursor.execute(sql_climbing_total_item1f_insert,(ct, score, logTime, bandId)) 
-        elif itemNo == '002':
-            cursor.execute(sql_climbing_total_item2f_insert,(ct, score, logTime, bandId)) 
-        elif itemNo == '003':
-            cursor.execute(sql_climbing_total_item3f_insert,(ct, score, logTime, bandId)) 
-        elif itemNo == '004':
-            cursor.execute(sql_climbing_total_item4f_insert,(ct, score, logTime, bandId)) 
-        elif itemNo == '005':
-            cursor.execute(sql_climbing_total_item4f_insert,(ct, score, logTime, bandId)) 
-        else:
-            cursor.execute(sql_climbing_total_item5f_insert,(ct, score, logTime, bandId)) 
-        board_db.commit()
- 
-        userIndex = list(dicTime.keys()).index(bandId)
-        print(userIndex)
+        print(dicFinishTime)
 
-        if userIndex == 1:
-            if itemNo == '001':
-                cursor.execute(sql_climbing_score_011_update,score) 
-            elif itemNo == '002':  
-                cursor.execute(sql_climbing_score_012_update,score)  
-            elif itemNo == '003':
-                cursor.execute(sql_climbing_score_013_update,score)  
-            elif itemNo == '004':
-                cursor.execute(sql_climbing_score_014_update,score)  
-            elif itemNo == '005':
-                cursor.execute(sql_climbing_score_014_update,score)  
-            else:
-                cursor.execute(sql_climbing_score_015_update,score)   
-        elif userIndex == 2:
-            if itemNo == '001':
-                cursor.execute(sql_climbing_score_021_update,score) 
-            elif itemNo == '002':  
-                cursor.execute(sql_climbing_score_022_update,score)  
-            elif itemNo == '003':
-                cursor.execute(sql_climbing_score_023_update,score)  
-            elif itemNo == '004':
-                cursor.execute(sql_climbing_score_024_update,score)  
-            elif itemNo == '005':
-                cursor.execute(sql_climbing_score_024_update,score)  
-            else:
-                cursor.execute(sql_climbing_score_025_update,score)    
-        elif userIndex == 3:
-            if itemNo == '001':
-                cursor.execute(sql_climbing_score_031_update,score) 
-            elif itemNo == '002':  
-                cursor.execute(sql_climbing_score_032_update,score)  
-            elif itemNo == '003':
-                cursor.execute(sql_climbing_score_033_update,score)  
-            elif itemNo == '004':
-                cursor.execute(sql_climbing_score_034_update,score)  
-            elif itemNo == '005':
-                cursor.execute(sql_climbing_score_034_update,score)  
-            else:
-                cursor.execute(sql_climbing_score_035_update,score)    
-        elif userIndex == 4:
-            if itemNo == '001':
-                cursor.execute(sql_climbing_score_041_update,score) 
-            elif itemNo == '002':  
-                cursor.execute(sql_climbing_score_042_update,score)  
-            elif itemNo == '003':
-                cursor.execute(sql_climbing_score_043_update,score)  
-            elif itemNo == '004':
-                cursor.execute(sql_climbing_score_044_update,score)  
-            elif itemNo == '005':
-                cursor.execute(sql_climbing_score_044_update,score)  
-            else:
-                cursor.execute(sql_climbing_score_045_update,score)    
-        elif userIndex == 5:
-            if itemNo == '001':
-                cursor.execute(sql_climbing_score_051_update,score) 
-            elif itemNo == '002':  
-                cursor.execute(sql_climbing_score_052_update,score)  
-            elif itemNo == '003':
-                cursor.execute(sql_climbing_score_053_update,score)  
-            elif itemNo == '004':
-                cursor.execute(sql_climbing_score_054_update,score)  
-            elif itemNo == '005':
-                cursor.execute(sql_climbing_score_054_update,score)  
-            else:
-                cursor.execute(sql_climbing_score_055_update,score)    
-        elif userIndex == 6:
-            if itemNo == '001':
-                cursor.execute(sql_climbing_score_061_update,score) 
-            elif itemNo == '002':  
-                cursor.execute(sql_climbing_score_062_update,score)  
-            elif itemNo == '003':
-                cursor.execute(sql_climbing_score_063_update,score)  
-            elif itemNo == '004':
-                cursor.execute(sql_climbing_score_064_update,score)  
-            elif itemNo == '005':
-                cursor.execute(sql_climbing_score_064_update,score)  
-            else:
-                cursor.execute(sql_climbing_score_065_update,score)    
-        elif userIndex == 7:
-            if itemNo == '001':
-                cursor.execute(sql_climbing_score_071_update,score) 
-            elif itemNo == '002':  
-                cursor.execute(sql_climbing_score_072_update,score)  
-            elif itemNo == '003':
-                cursor.execute(sql_climbing_score_073_update,score)  
-            elif itemNo == '004':
-                cursor.execute(sql_climbing_score_074_update,score)  
-            elif itemNo == '005':
-                cursor.execute(sql_climbing_score_074_update,score)  
-            else:
-                cursor.execute(sql_climbing_score_075_update,score)    
-        elif userIndex == 8:
-            if itemNo == '001':
-                cursor.execute(sql_climbing_score_081_update,score) 
-            elif itemNo == '002':  
-                cursor.execute(sql_climbing_score_082_update,score)  
-            elif itemNo == '003':
-                cursor.execute(sql_climbing_score_083_update,score)  
-            elif itemNo == '004':
-                cursor.execute(sql_climbing_score_084_update,score)  
-            elif itemNo == '005':
-                cursor.execute(sql_climbing_score_084_update,score)  
-            else:
-                cursor.execute(sql_climbing_score_085_update,score)   
-        elif userIndex == 9:
-            if itemNo == '001':
-                cursor.execute(sql_climbing_score_091_update,score) 
-            elif itemNo == '002':  
-                cursor.execute(sql_climbing_score_092_update,score)  
-            elif itemNo == '003':
-                cursor.execute(sql_climbing_score_093_update,score)  
-            elif itemNo == '004':
-                cursor.execute(sql_climbing_score_094_update,score)  
-            elif itemNo == '005':
-                cursor.execute(sql_climbing_score_094_update,score)  
-            else:
-                cursor.execute(sql_climbing_score_095_update,score)    
-        elif userIndex == 10:
-            if itemNo == '001':
-                cursor.execute(sql_climbing_score_101_update,score) 
-            elif itemNo == '002':  
-                cursor.execute(sql_climbing_score_102_update,score)  
-            elif itemNo == '003':
-                cursor.execute(sql_climbing_score_103_update,score)  
-            elif itemNo == '004':
-                cursor.execute(sql_climbing_score_104_update,score)  
-            elif itemNo == '005':
-                cursor.execute(sql_climbing_score_104_update,score)  
-            else:
-                cursor.execute(sql_climbing_score_105_update,score)                                                                                    
-        elif userIndex == 11:
-            if itemNo == '001':
-                cursor.execute(sql_climbing_score_111_update,score) 
-            elif itemNo == '002':  
-                cursor.execute(sql_climbing_score_112_update,score)  
-            elif itemNo == '003':
-                cursor.execute(sql_climbing_score_113_update,score)  
-            elif itemNo == '004':
-                cursor.execute(sql_climbing_score_114_update,score)  
-            elif itemNo == '005':
-                cursor.execute(sql_climbing_score_114_update,score)  
-            else:
-                cursor.execute(sql_climbing_score_115_update,score)   
-        elif userIndex == 12:
-            if itemNo == '001':
-                cursor.execute(sql_climbing_score_121_update,score) 
-            elif itemNo == '002':  
-                cursor.execute(sql_climbing_score_122_update,score)  
-            elif itemNo == '003':
-                cursor.execute(sql_climbing_score_123_update,score)  
-            elif itemNo == '004':
-                cursor.execute(sql_climbing_score_124_update,score)  
-            elif itemNo == '005':
-                cursor.execute(sql_climbing_score_124_update,score)  
-            else:
-                cursor.execute(sql_climbing_score_125_update,score)    
-        elif userIndex == 13:
-            if itemNo == '001':
-                cursor.execute(sql_climbing_score_131_update,score) 
-            elif itemNo == '002':  
-                cursor.execute(sql_climbing_score_132_update,score)  
-            elif itemNo == '003':
-                cursor.execute(sql_climbing_score_133_update,score)  
-            elif itemNo == '004':
-                cursor.execute(sql_climbing_score_134_update,score)  
-            elif itemNo == '005':
-                cursor.execute(sql_climbing_score_134_update,score)  
-            else:
-                cursor.execute(sql_climbing_score_135_update,score)    
-        elif userIndex == 14:
-            if itemNo == '001':
-                cursor.execute(sql_climbing_score_141_update,score) 
-            elif itemNo == '002':  
-                cursor.execute(sql_climbing_score_142_update,score)  
-            elif itemNo == '003':
-                cursor.execute(sql_climbing_score_143_update,score)  
-            elif itemNo == '004':
-                cursor.execute(sql_climbing_score_144_update,score)  
-            elif itemNo == '005':
-                cursor.execute(sql_climbing_score_144_update,score)  
-            else:
-                cursor.execute(sql_climbing_score_145_update,score)    
-        elif userIndex == 15:
-            if itemNo == '001':
-                cursor.execute(sql_climbing_score_151_update,score) 
-            elif itemNo == '002':  
-                cursor.execute(sql_climbing_score_152_update,score)  
-            elif itemNo == '003':
-                cursor.execute(sql_climbing_score_153_update,score)  
-            elif itemNo == '004':
-                cursor.execute(sql_climbing_score_154_update,score)  
-            elif itemNo == '005':
-                cursor.execute(sql_climbing_score_154_update,score)  
-            else:
-                cursor.execute(sql_climbing_score_155_update,score)    
-        elif userIndex == 16:
-            if itemNo == '001':
-                cursor.execute(sql_climbing_score_161_update,score) 
-            elif itemNo == '002':  
-                cursor.execute(sql_climbing_score_162_update,score)  
-            elif itemNo == '003':
-                cursor.execute(sql_climbing_score_163_update,score)  
-            elif itemNo == '004':
-                cursor.execute(sql_climbing_score_164_update,score)  
-            elif itemNo == '005':
-                cursor.execute(sql_climbing_score_164_update,score)  
-            else:
-                cursor.execute(sql_climbing_score_165_update,score)    
-        elif userIndex == 17:
-            if itemNo == '001':
-                cursor.execute(sql_climbing_score_171_update,score) 
-            elif itemNo == '002':  
-                cursor.execute(sql_climbing_score_172_update,score)  
-            elif itemNo == '003':
-                cursor.execute(sql_climbing_score_173_update,score)  
-            elif itemNo == '004':
-                cursor.execute(sql_climbing_score_174_update,score)  
-            elif itemNo == '005':
-                cursor.execute(sql_climbing_score_174_update,score)  
-            else:
-                cursor.execute(sql_climbing_score_175_update,score)    
-        elif userIndex == 18:
-            if itemNo == '001':
-                cursor.execute(sql_climbing_score_181_update,score) 
-            elif itemNo == '002':  
-                cursor.execute(sql_climbing_score_182_update,score)  
-            elif itemNo == '003':
-                cursor.execute(sql_climbing_score_183_update,score)  
-            elif itemNo == '004':
-                cursor.execute(sql_climbing_score_184_update,score)  
-            elif itemNo == '005':
-                cursor.execute(sql_climbing_score_184_update,score)  
-            else:
-                cursor.execute(sql_climbing_score_185_update,score)   
-        elif userIndex == 19:
-            if itemNo == '001':
-                cursor.execute(sql_climbing_score_191_update,score) 
-            elif itemNo == '002':  
-                cursor.execute(sql_climbing_score_192_update,score)  
-            elif itemNo == '003':
-                cursor.execute(sql_climbing_score_193_update,score)  
-            elif itemNo == '004':
-                cursor.execute(sql_climbing_score_194_update,score)  
-            elif itemNo == '005':
-                cursor.execute(sql_climbing_score_194_update,score)  
-            else:
-                cursor.execute(sql_climbing_score_195_update,score)    
-        else:
-            if itemNo == '001':
-                cursor.execute(sql_climbing_score_201_update,score) 
-            elif itemNo == '002':  
-                cursor.execute(sql_climbing_score_202_update,score)  
-            elif itemNo == '003':
-                cursor.execute(sql_climbing_score_203_update,score)  
-            elif itemNo == '004':
-                cursor.execute(sql_climbing_score_204_update,score)  
-            elif itemNo == '005':
-                cursor.execute(sql_climbing_score_204_update,score)  
-            else:
-                cursor.execute(sql_climbing_score_205_update,score)         
+        cursor.execute(sql_sp_total_insert,(bandId, "0000", ct, startorfinish, itemNo)) 
         board_db.commit()
-            
+
+        '''
+        finish_time = datetime.datetime.strptime(dicFinishTime[bandId],'%Y-%m-%d %H:%M:%S')
+        start_time = datetime.datetime.strptime(dicStartTime[bandId],'%Y-%m-%d %H:%M:%S')
+        dicLabTime[bandId] = finish_time - start_time
+
+        if itemNo == 3:
+            print("finish left")
+            cursor.execute(sql_sp_score_left_update,(bandId, dicTagCnt[bandId], dicTagScore[bandId],dicLabTime[bandId])) 
+        else:
+            print("finish right")
+            cursor.execute(sql_sp_score_right_update,(bandId, dicTagCnt[bandId], dicTagScore[bandId],dicLabTime[bandId])) 
+        
+        board_db.commit()   
+        '''
+
+    else:
+        print('point')
+
+        print(ct)
+        '''
+        dicTagCnt[bandId] += 1
+
+        if startorfinish == 2:
+            dicTagScore[bandId] = dicTagScore[bandId] + 10
+        elif startorfinish == 3:
+            dicTagScore[bandId] = dicTagScore[bandId] + 30
+        elif startorfinish == 4:
+            dicTagScore[bandId] = dicTagScore[bandId] + 50
+        else:
+            dicTagScore[bandId] = dicTagScore[bandId] + 100
+        
+        cursor.execute(sql_sp_total_insert,(bandId, "0000", ct, startorfinish, itemNo)) 
+        board_db.commit() 
+        '''
+
 
  
 
