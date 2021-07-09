@@ -93,18 +93,15 @@ def parsing_data(data):
     print(tmp)
     if len(tmp) == 20:
         itemNo = tmp[1:4]
-    startorfinish = tmp[4:5]
-    bandId = tmp[5:-1]
-        else:
+        startorfinish = tmp[4:5]
+        bandId = tmp[5:-1]
+    else:
         itemNo = tmp[2:5]
         startorfinish = tmp[5:6]
         bandId = tmp[6:-1]
+    
     print(itemNo)
-    print(bandId)
-
-
-        
-        
+    print(bandId)    
 
     if startorfinish == '1': # '1' 
         print('start')
@@ -114,6 +111,10 @@ def parsing_data(data):
         #user_name = df.iloc[0,0]
         #print(user_name)
 
+        score = 0
+        cursor.execute(sql_sw_score_update,(bandId, score)) 
+        board_db.commit()
+
         dicTime[bandId] = ct
         print(ct)
         cursor.execute(sql_sw_total_s_insert,(bandId, ct)) 
@@ -121,13 +122,19 @@ def parsing_data(data):
         dicTime[bandId]=ct
         print(dicTime)
 
-    else:
+    elif startorfinish == '9': # '9' 
         print('finish')
         #cursor.execute(sql_findName,bandId) 
         #result = cursor.fetchall()
         #df = pd.DataFrame(result)
         #user_name = df.iloc[0,0]
         #print(user_name)
+
+        print(dicTime)
+        if dicTime.get(bandId):
+            print("has key")
+        else:
+            return
         
         print(ct)
         finish_time = datetime.datetime.strptime(ct,'%Y-%m-%d %H:%M:%S')
@@ -148,15 +155,27 @@ def parsing_data(data):
 def readThread(ser):
     global line
     global exitThread
+    global rxcnt
     cnt = 0
-
-    # 쓰레드 종료될때까지 계속 돌림
+    rxcnt = 0
+    
+    
+        # 쓰레드 종료될때까지 계속 돌림
     while not exitThread:
         #데이터가 있있다면
         
         for c in ser.read():
             #line 변수에 차곡차곡 추가하여 넣는다.
-            line.append(chr(c))
+            rxcnt +=1
+            if c==255:
+                print(rxcnt, c)
+                continue
+
+            if c>=200:
+                print(rxcnt, c)
+                continue
+            else:
+                line.append(chr(c))
 
             if c == 84:         #'T'
                 print(c)
@@ -170,10 +189,12 @@ def readThread(ser):
                     #데이터 처리 함수로 호출
                     parsing_data(line)
                 else:
-                    print(len(line))
+                    print("ng str:", line)
+                    print("ng len :",  len(line))
                     parsing_data(line[-20:])
 
                 #line 변수 초기화
+                rxcnt = 0
                 del line[:]   
 
 
