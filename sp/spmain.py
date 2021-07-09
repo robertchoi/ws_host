@@ -280,9 +280,9 @@ def parsing_data(data):
         
         dicFinishTime[bandId] = ct
         print(ct)
-        '''
-        print(dicFinishTime)
+        
 
+        print(dicFinishTime)
         cursor.execute(sql_sp_total_insert,(bandId, "0000", ct, startorfinish, itemNo)) 
         board_db.commit()
 
@@ -299,12 +299,19 @@ def parsing_data(data):
             cursor.execute(sql_sp_score_right_update,(bandId, dicTagCnt[bandId], dicTagScore[bandId],dicLabTime[bandId])) 
         
         board_db.commit()   
-        '''
+        
+        del dicStartTime[bandId]
+        del dicFinishTime[bandId]
+        del dicTagCnt[bandId]
+        del dicTagScore[bandId]
+        del dicLabTime[bandId]
+
 
     else:
         print('point')
         print(ct)
-        '''
+        
+
         dicTagCnt[bandId] += 1
 
         if startorfinish == 2:
@@ -319,7 +326,7 @@ def parsing_data(data):
         cursor.execute(sql_sp_total_insert,(bandId, "0000", ct, startorfinish, itemNo)) 
         board_db.commit() 
         
-        '''
+        
 
  
 
