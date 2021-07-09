@@ -641,11 +641,15 @@ def parsing_data(data):
 
  
 
+
 #본 쓰레드
 def readThread(ser):
     global line
     global exitThread
+    global rxcnt
     cnt = 0
+    rxcnt = 0
+
 
     # 쓰레드 종료될때까지 계속 돌림
     while not exitThread:
@@ -653,7 +657,16 @@ def readThread(ser):
         
         for c in ser.read():
             #line 변수에 차곡차곡 추가하여 넣는다.
-            line.append(chr(c))
+            rxcnt +=1
+            if c==255:
+                print(rxcnt, c)
+                continue
+
+            if c>=200:
+                print(rxcnt, c)
+                continue
+            else:
+                line.append(chr(c))
 
             if c == 84:         #'T'
                 print(c)
@@ -667,10 +680,12 @@ def readThread(ser):
                     #데이터 처리 함수로 호출
                     parsing_data(line)
                 else:
-                    print(len(line))
+                    print("ng str:", line)
+                    print("ng len :",  len(line))
                     parsing_data(line[-20:])
 
                 #line 변수 초기화
+                rxcnt = 0
                 del line[:]   
 
 

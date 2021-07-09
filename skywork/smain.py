@@ -89,11 +89,23 @@ def parsing_data(data):
     #board_db.commit()
 
     #출력!
+    #T0021041E8D3A467081E
     print(tmp)
-    print(tmp[1:4])
+    if len(tmp) == 20:
+        itemNo = tmp[1:4]
     startorfinish = tmp[4:5]
     bandId = tmp[5:-1]
+        else:
+        itemNo = tmp[2:5]
+        startorfinish = tmp[5:6]
+        bandId = tmp[6:-1]
+    print(itemNo)
     print(bandId)
+
+
+        
+        
+
     if startorfinish == '1': # '1' 
         print('start')
         #cursor.execute(sql_findName,bandId) 
@@ -101,6 +113,8 @@ def parsing_data(data):
         #df = pd.DataFrame(result)
         #user_name = df.iloc[0,0]
         #print(user_name)
+
+        dicTime[bandId] = ct
         print(ct)
         cursor.execute(sql_sw_total_s_insert,(bandId, ct)) 
         board_db.commit()
@@ -114,6 +128,7 @@ def parsing_data(data):
         #df = pd.DataFrame(result)
         #user_name = df.iloc[0,0]
         #print(user_name)
+        
         print(ct)
         finish_time = datetime.datetime.strptime(ct,'%Y-%m-%d %H:%M:%S')
         start_time = datetime.datetime.strptime(dicTime[bandId],'%Y-%m-%d %H:%M:%S')
@@ -150,6 +165,7 @@ def readThread(ser):
 
             #print(cnt)
             if c == 69 and cnt == 20: #라인의 끝을 만나면.. 'E'
+            
                 if len(line) == 20:
                     #데이터 처리 함수로 호출
                     parsing_data(line)
