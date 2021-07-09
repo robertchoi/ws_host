@@ -19,6 +19,7 @@ baud = 115200 # 시리얼 보드레이트(통신속도)
 exitThread = False   # 쓰레드 종료용 변수
 
 entryCnt = 0
+midCnt = 0
 
 board_db = pymysql.connect(
     host='wonderdb.c03rvmbon7t9.ap-northeast-2.rds.amazonaws.com',
@@ -77,7 +78,7 @@ sql_climbing_init = "UPDATE climbing_score SET `item161_score` = '0', `item061_s
 sql_sp_total_insert = "insert into sp_score_total (log_name, log_phone, log_time, log_tag_type, log_tag_num) VALUES (%s, %s, %s, %s, %s)"  
 
 sql_sp_score_left_update = "UPDATE sp_score_left SET log_name=%s, log_sp_cnt=%s, log_sp_score=%s, log_sp_time=%s" 
-sql_sp_score_right_update = "UPDATE sp_score_left SET log_name=%s, log_sp_cnt=%s, log_sp_score=%s, log_sp_time=%s" 
+sql_sp_score_right_update = "UPDATE sp_score_right SET log_name=%s, log_sp_cnt=%s, log_sp_score=%s, log_sp_time=%s" 
 
 sql_climbing_total_logtime_insert = "insert into climbing_score_total (log_time, log_name) VALUES (%s, %s)"  
 #sql_climbing_total_item1s_insert = "insert into climbing_score_total (log_name, log_item1_s) VALUES (%s, %s) where = %s" 
@@ -91,6 +92,17 @@ sql_climbing_total_item2s_insert = "UPDATE climbing_score_total SET log_item2_s=
 sql_climbing_total_item3s_insert = "UPDATE climbing_score_total SET log_item3_s=%s where log_time = %s and log_name=%s" 
 sql_climbing_total_item4s_insert = "UPDATE climbing_score_total SET log_item4_s=%s where log_time = %s and log_name=%s" 
 sql_climbing_total_item5s_insert = "UPDATE climbing_score_total SET log_item5_s=%s where log_time = %s and log_name=%s" 
+
+sql_mid_score_01_update = "UPDATE sp_score_mid SET log01_name=%s, log01_tag_cnt=%s, log01_score=%s where id = 1" 
+sql_mid_score_02_update = "UPDATE sp_score_mid SET log02_name=%s, log02_tag_cnt=%s, log02_score=%s where id = 1"
+sql_mid_score_03_update = "UPDATE sp_score_mid SET log03_name=%s, log03_tag_cnt=%s, log03_score=%s where id = 1"
+sql_mid_score_04_update = "UPDATE sp_score_mid SET log04_name=%s, log04_tag_cnt=%s, log04_score=%s where id = 1"
+sql_mid_score_05_update = "UPDATE sp_score_mid SET log05_name=%s, log05_tag_cnt=%s, log05_score=%s where id = 1"
+sql_mid_score_06_update = "UPDATE sp_score_mid SET log06_name=%s, log06_tag_cnt=%s, log06_score=%s where id = 1"
+sql_mid_score_07_update = "UPDATE sp_score_mid SET log07_name=%s, log07_tag_cnt=%s, log07_score=%s where id = 1"
+sql_mid_score_08_update = "UPDATE sp_score_mid SET log08_name=%s, log08_tag_cnt=%s, log08_score=%s where id = 1"
+sql_mid_score_09_update = "UPDATE sp_score_mid SET log09_name=%s, log09_tag_cnt=%s, log09_score=%s where id = 1"
+sql_mid_score_10_update = "UPDATE sp_score_mid SET log10_name=%s, log10_tag_cnt=%s, log10_score=%s where id = 1"
 
 sql_climbing_total_item1f_insert = "UPDATE climbing_score_total SET log_item1_f=%s, log_item1_time = %s where log_time = %s and log_name=%s" 
 sql_climbing_total_item2f_insert = "UPDATE climbing_score_total SET log_item2_f=%s, log_item2_time = %s where log_time = %s and log_name=%s" 
@@ -277,6 +289,10 @@ def parsing_data(data):
     elif startorfinish == '9':
         print('finish')
 
+        if dicStartTime.get(bandId):
+            print("has key")
+        else:
+            return
         
         dicFinishTime[bandId] = ct
         print(ct)
@@ -310,7 +326,18 @@ def parsing_data(data):
     else:
         print('point')
         print(ct)
-        
+
+        if dicStartTime.get(bandId):
+            print("has key")
+        else:
+            return
+
+
+        dicFinishTime[bandId] = ct
+        finish_time = datetime.datetime.strptime(dicFinishTime[bandId],'%Y-%m-%d %H:%M:%S')
+        start_time = datetime.datetime.strptime(dicStartTime[bandId],'%Y-%m-%d %H:%M:%S')
+        dicLabTime[bandId] = finish_time - start_time
+    
 
         dicTagCnt[bandId] += 1
 
@@ -326,10 +353,36 @@ def parsing_data(data):
         cursor.execute(sql_sp_total_insert,(bandId, "0000", ct, startorfinish, itemNo)) 
         board_db.commit() 
         
-        
 
- 
+        if itemNo == '045' or itemNo == '046':
+            #Mid No
+            global midCnt
+            midCnt +=1
 
+            if midCnt > 10:
+                midCnt = 1
+
+            if midCnt == 1:
+                cursor.execute(sql_mid_score_01_update,(bandId, dicTagCnt[bandId], dicLabTime[bandId])) 
+            elif midCnt == 2:
+                cursor.execute(sql_mid_score_02_update,(bandId, dicTagCnt[bandId], dicLabTime[bandId])) 
+            elif midCnt == 3:
+                cursor.execute(sql_mid_score_03_update,(bandId, dicTagCnt[bandId], dicLabTime[bandId])) 
+            elif midCnt == 4:
+                cursor.execute(sql_mid_score_04_update,(bandId, dicTagCnt[bandId], dicLabTime[bandId])) 
+            elif midCnt == 5:
+                cursor.execute(sql_mid_score_05_update,(bandId, dicTagCnt[bandId], dicLabTime[bandId]))         
+            elif midCnt == 6:
+                cursor.execute(sql_mid_score_06_update,(bandId, dicTagCnt[bandId], dicLabTime[bandId])) 
+            elif midCnt == 7:
+                cursor.execute(sql_mid_score_07_update,(bandId, dicTagCnt[bandId], dicLabTime[bandId]))  
+            elif midCnt == 8:
+                cursor.execute(sql_mid_score_08_update,(bandId, dicTagCnt[bandId], dicLabTime[bandId])) 
+            elif midCnt == 9:
+                cursor.execute(sql_mid_score_09_update,(bandId, dicTagCnt[bandId], dicLabTime[bandId])) 
+            elif midCnt == 10:
+                cursor.execute(sql_mid_score_10_update,(bandId, dicTagCnt[bandId], dicLabTime[bandId])) 
+            board_db.commit() 
 #본 쓰레드
 def readThread(ser):
     global line
