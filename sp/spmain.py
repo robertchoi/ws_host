@@ -8,11 +8,7 @@ import pymysql
 import datetime
 import pandas as pd
 import numpy
-import RPi.GPIO as GPIO
 
-
-GPIO.setmode(GPIO.BCM)  #gpio 모드 셋팅
-GPIO.setup(23, GPIO.IN, pull_up_down=GPIO.PUD_UP)       #Button 입력 GPIO23
 
 line = [] #라인 단위로 데이터 가져올 리스트 변수
 
@@ -281,14 +277,16 @@ def parsing_data(data):
     elif startorfinish == '9':
         print('finish')
 
+        
         dicFinishTime[bandId] = ct
         print(ct)
+        '''
         print(dicFinishTime)
 
         cursor.execute(sql_sp_total_insert,(bandId, "0000", ct, startorfinish, itemNo)) 
         board_db.commit()
 
-        '''
+        
         finish_time = datetime.datetime.strptime(dicFinishTime[bandId],'%Y-%m-%d %H:%M:%S')
         start_time = datetime.datetime.strptime(dicStartTime[bandId],'%Y-%m-%d %H:%M:%S')
         dicLabTime[bandId] = finish_time - start_time
@@ -305,7 +303,6 @@ def parsing_data(data):
 
     else:
         print('point')
-
         print(ct)
         '''
         dicTagCnt[bandId] += 1
@@ -321,8 +318,8 @@ def parsing_data(data):
         
         cursor.execute(sql_sp_total_insert,(bandId, "0000", ct, startorfinish, itemNo)) 
         board_db.commit() 
+        
         '''
-
 
  
 
@@ -330,7 +327,10 @@ def parsing_data(data):
 def readThread(ser):
     global line
     global exitThread
+    global rxcnt
     cnt = 0
+    rxcnt = 0
+
 
     # 쓰레드 종료될때까지 계속 돌림
     while not exitThread:
@@ -338,7 +338,16 @@ def readThread(ser):
         
         for c in ser.read():
             #line 변수에 차곡차곡 추가하여 넣는다.
-            line.append(chr(c))
+            rxcnt +=1
+            if c==255:
+                print(rxcnt, c)
+                continue
+
+            if c>=200:
+                print(rxcnt, c)
+                continue
+            else:
+                line.append(chr(c))
 
             if c == 84:         #'T'
                 print(c)
@@ -352,10 +361,12 @@ def readThread(ser):
                     #데이터 처리 함수로 호출
                     parsing_data(line)
                 else:
-                    print(len(line))
+                    print("ng str:", line)
+                    print("ng len :",  len(line))
                     parsing_data(line[-20:])
 
                 #line 변수 초기화
+                rxcnt = 0
                 del line[:]   
 
 
@@ -371,21 +382,3 @@ if __name__ == "__main__" :
     thread = threading.Thread(target=readThread, args=(ser,))
     #시작!
     thread.start()
-
-    
-
-    try:
-        while True:
-            button_state = GPIO.input(23)  #버튼 상태 확인
-            if button_state == False:      #눌러진상태면
-
-                print('Button Pressed...')   
-                entryCnt = 0
-                dicTime.clear()
-                cursor.execute(sql_climbing_init) 
-                board_db.commit()
-
-                
-                time.sleep(0.5)
-    except KeyboardInterrupt:       #ctrl-c 누를시
-        GPIO.cleanup()
