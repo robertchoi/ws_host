@@ -145,8 +145,8 @@ def parsing_data(data):
         c_logtime = datetime.datetime.strptime(str(user_loginTime),'%Y-%m-%d %H:%M:%S')
         c_runtime = c_time - c_logtime
 
-        if itemNo == '001':     # skywork
-            print("001")
+        if itemNo == '002':     # skywork
+            print("002")
 
             cursor.execute(sql_sw_check_get_score,(bandId, user_phone)) 
             result = cursor.fetchall()
@@ -162,8 +162,8 @@ def parsing_data(data):
             board_db.commit()
 
 
-        elif itemNo == '002':     # climbing
-            print("002")
+        elif itemNo == '001':     # climbing
+            print("001")
             #sql_climbing_check_get_score
             cursor.execute(sql_climbing_check_get_score,(bandId, user_phone)) 
             result = cursor.fetchall()
