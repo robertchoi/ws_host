@@ -1,3 +1,4 @@
+#-*- coding:utf-8 -*-
 import sys
 import serial
 import time
@@ -61,9 +62,9 @@ dicTime = {
 cursor = board_db.cursor(pymysql.cursors.DictCursor)
 sql = "select * from sw_score;"
 sql_insert = "insert into score (id, timelog, tagvalue, tagname) VALUES (%s, %s, %s, %s)" 
-sql_findName  = "select user_name from user_band where bandId = %s"
+sql_findName  = "select user_name, user_phone, sex from user_band where bandId = %s"
 sql_sw_total_s_insert = "insert into sw_score_total (log_name, log_time_s) VALUES (%s, %s)" 
-sql_sw_total_s_update = "update sw_score_total set log_time_f = %s, log_score = %s where log_time_s = %s" 
+sql_sw_total_s_update = "update sw_score_total set log_time_f = %s, log_score = %s, log_sex = %s, log_phone = %s where log_time_s = %s" 
 sql_sw_score_update = "update sw_score set log_name = %s, log_score = %s" 
 
 
@@ -105,29 +106,31 @@ def parsing_data(data):
 
     if startorfinish == '1': # '1' 
         print('start')
-        #cursor.execute(sql_findName,bandId) 
-        #result = cursor.fetchall()
-        #df = pd.DataFrame(result)
-        #user_name = df.iloc[0,0]
+        cursor.execute(sql_findName,bandId) 
+        result = cursor.fetchall()
+        df = pd.DataFrame(result)
+        user_name = df.iloc[0,0]
         #print(user_name)
 
         score = 0
-        cursor.execute(sql_sw_score_update,(bandId, score)) 
+        cursor.execute(sql_sw_score_update,(user_name, score)) 
         board_db.commit()
 
         dicTime[bandId] = ct
         print(ct)
-        cursor.execute(sql_sw_total_s_insert,(bandId, ct)) 
+        cursor.execute(sql_sw_total_s_insert,(user_name, ct)) 
         board_db.commit()
         dicTime[bandId]=ct
         print(dicTime)
 
     elif startorfinish == '9': # '9' 
         print('finish')
-        #cursor.execute(sql_findName,bandId) 
-        #result = cursor.fetchall()
-        #df = pd.DataFrame(result)
-        #user_name = df.iloc[0,0]
+        cursor.execute(sql_findName,bandId) 
+        result = cursor.fetchall()
+        df = pd.DataFrame(result)
+        user_name = df.iloc[0,0]
+        user_phone = df.iloc[0,1]
+        sex = df.iloc[0,2]
         #print(user_name)
 
         print(dicTime)
@@ -142,10 +145,10 @@ def parsing_data(data):
         score = finish_time - start_time
         print(score)
         print(finish_time, start_time)
-        cursor.execute(sql_sw_total_s_update,(ct, score, dicTime[bandId])) 
+        cursor.execute(sql_sw_total_s_update,(ct, score, sex, user_phone, dicTime[bandId]))
         board_db.commit()
  
-        cursor.execute(sql_sw_score_update,(bandId, score)) 
+        cursor.execute(sql_sw_score_update,(user_name, score)) 
         board_db.commit()
         del dicTime[bandId]
 

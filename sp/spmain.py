@@ -8,18 +8,23 @@ import pymysql
 import datetime
 import pandas as pd
 import numpy
+import socket
 
 
-line = [] #라인 단위로 데이터 가져올 리스트 변수
+line = []
 
-#port = '/dev/tty.usbserial-14440' # 시리얼 포트
-port = '/dev/ttyUSB0' # 시리얼 포트
-baud = 115200 # 시리얼 보드레이트(통신속도)
 
-exitThread = False   # 쓰레드 종료용 변수
+#port = '/dev/tty.usbserial-14440' 
+port = '/dev/ttyUSB0' 
+baud = 115200 
+
+exitThread = False   
 
 entryCnt = 0
 midCnt = 0
+user_name = ""
+user_phone = ""
+sex = 1
 
 board_db = pymysql.connect(
     host='wonderdb.c03rvmbon7t9.ap-northeast-2.rds.amazonaws.com',
@@ -67,7 +72,7 @@ dicTime = {
 cursor = board_db.cursor(pymysql.cursors.DictCursor)
 sql = "select * from sw_score;"
 sql_insert = "insert into score (id, timelog, tagvalue, tagname) VALUES (%s, %s, %s, %s)" 
-sql_findName  = "select user_name from user_band where bandId = %s"
+sql_findName  = "select user_name, user_phone, sex from user_band where bandId = %s"
 sql_sw_total_s_insert = "insert into sw_score_total (log_name, log_time_s) VALUES (%s, %s)" 
 sql_sw_total_s_update = "update sw_score_total set log_time_f = %s, log_score = %s where log_time_s = %s" 
 sql_sw_score_update = "update sw_score set log_name = %s, log_score = %s" 
@@ -76,6 +81,7 @@ sql_sw_score_update = "update sw_score set log_name = %s, log_score = %s"
 sql_climbing_init = "UPDATE climbing_score SET `item161_score` = '0', `item061_score` = '0', `item111_score` = '0', `item011_score` = '0', `user20_name` = 'user20', `user10_name` = 'user10', `user15_name` = 'user15', `user05_name` = 'user5', `user19_name` = 'user19', `user09_name` = 'user9', `user14_name` = 'user14', `user04_name` = 'user4', `item201_score` = '0', `item101_score` = '0', `item151_score` = '0', `item051_score` = '0', `user18_name` = 'user18', `user08_name` = 'user8', `user13_name` = 'user13', `user03_name` = 'user3', `item202_score` = '0', `item102_score` = '0', `item152_score` = '0', `item052_score` = '0', `item191_score` = '0', `item091_score` = '0', `item141_score` = '0', `item041_score` = '0', `item203_score` = '0', `item103_score` = '0', `item153_score` = '0', `item053_score` = '0', `user17_name` = 'user17', `user07_name` = 'user7', `user12_name` = 'user12', `user02_name` = 'user2', `item204_score` = '0', `item104_score` = '0', `item154_score` = '0', `item054_score` = '0', `item192_score` = '0', `item092_score` = '0', `item142_score` = '0', `item042_score` = '0', `item205_score` = '0', `item105_score` = '0', `item155_score` = '0', `item055_score` = '0', `item181_score` = '0', `item081_score` = '0', `item131_score` = '0', `item031_score` = '0', `item193_score` = '0', `item093_score` = '0', `item143_score` = '0', `item043_score` = '0', `user16_name` = 'user16', `user06_name` = 'user6', `user11_name` = 'user11', `user01_name` = 'user1', `item194_score` = '0', `item094_score` = '0', `item144_score` = '0', `item044_score` = '0', `item182_score` = '0', `item082_score` = '0', `item132_score` = '0', `item032_score` = '0', `item195_score` = '0', `item095_score` = '0', `item145_score` = '0', `item045_score` = '0', `item171_score` = '0', `item071_score` = '0', `item121_score` = '0', `item021_score` = '0', `item184_score` = '0', `item084_score` = '0', `item134_score` = '0', `item034_score` = '0', `item172_score` = '0', `item072_score` = '0', `item122_score` = '0', `item022_score` = '0', `item185_score` = '0', `item085_score` = '0', `item135_score` = '0', `item035_score` = '0', `item162_score` = '0', `item062_score` = '0', `item112_score` = '0', `item012_score` = '0', `item173_score` = '0', `item073_score` = '0', `item123_score` = '0', `item023_score` = '0', `item163_score` = '0', `item063_score` = '0', `item113_score` = '0', `item013_score` = '0', `item174_score` = '0', `item074_score` = '0', `item124_score` = '0', `item024_score` = '0', `item164_score` = '0', `item064_score` = '0', `item114_score` = '0', `item014_score` = '0', `item175_score` = '0', `item075_score` = '0', `item125_score` = '0', `item025_score` = '0', `item165_score` = '0', `item065_score` = '0', `item115_score` = '0', `item015_score` = '0', `item183_score` = '0', `item083_score` = '0', `item133_score` = '0'"
 
 sql_sp_total_insert = "insert into sp_score_total (log_name, log_phone, log_time, log_tag_type, log_tag_num) VALUES (%s, %s, %s, %s, %s)"  
+sql_sp_sum_insert = "insert into sp_score_rank (user_name, user_phone, log_time, sex, score_sum) VALUES (%s, %s, %s, %s, %s)"  
 
 sql_sp_score_left_update = "UPDATE sp_score_left SET log_name=%s, log_sp_cnt=%s, log_sp_score=%s, log_sp_time=%s" 
 sql_sp_score_right_update = "UPDATE sp_score_right SET log_name=%s, log_sp_cnt=%s, log_sp_score=%s, log_sp_time=%s" 
@@ -231,15 +237,22 @@ sql_climbing_score_202_update = "UPDATE climbing_score SET item202_score = %s"
 sql_climbing_score_203_update = "UPDATE climbing_score SET item203_score = %s"
 sql_climbing_score_204_update = "UPDATE climbing_score SET item204_score = %s"
 sql_climbing_score_205_update = "UPDATE climbing_score SET item205_score = %s"
-#쓰레드 종료용 시그널 함수
+
 def handler(signum, frame):
      exitThread = True
 
+def ipcheck():
+	return socket.gethostbyname(socket.getfqdn())     
 
-#데이터 처리할 함수
+def str2sec(x):
+    '''
+         Convert string hour, minute, second to second
+    '''
+    h, m, s = x.split(':') # .split () function separates them by ':', .strip () function is used to remove spaces
+    return int(h)*3600 + int(m)*60 + int(s) #int () function converted to integer operation
+
+
 def parsing_data(data):
-    # 리스트 구조로 들어 왔기 때문에
-    # 작업하기 편하게 스트링으로 합침
     tmp = ''.join(data)
 
     #print(dicBand.get(tmp[5:]))  
@@ -252,7 +265,6 @@ def parsing_data(data):
     #cursor.execute(sql_insert,(dicBand.get(tmp[5:]), ct, dicScore.get(tmp[4]), tmp[1:4])) 
     #board_db.commit()
 
-    #출력!
     #T0021041E8D3A467081E
     print(tmp)
     if len(tmp) == 20:
@@ -270,10 +282,13 @@ def parsing_data(data):
     if startorfinish == '1': # '1' 
         print('start')
 
-        #cursor.execute(sql_findName,bandId) 
-        #result = cursor.fetchall()
-        #df = pd.DataFrame(result)
-        #user_name = df.iloc[0,0]
+        cursor.execute(sql_findName,bandId) 
+        result = cursor.fetchall()
+        df = pd.DataFrame(result)
+        global user_name, user_phone, sex
+        user_name = df.iloc[0,0]
+        user_phone = df.iloc[0,1]
+        sex = df.iloc[0,2]
         #print(user_name)
 
         dicStartTime[bandId] = ct
@@ -283,7 +298,7 @@ def parsing_data(data):
         print(ct)
         print(dicStartTime)
 
-        cursor.execute(sql_sp_total_insert,(bandId, "0000", ct, startorfinish, itemNo)) 
+        cursor.execute(sql_sp_total_insert,(user_name, user_phone, ct, startorfinish, itemNo)) 
         board_db.commit()
 
     elif startorfinish == '9':
@@ -299,22 +314,32 @@ def parsing_data(data):
         
 
         print(dicFinishTime)
-        cursor.execute(sql_sp_total_insert,(bandId, "0000", ct, startorfinish, itemNo)) 
+        cursor.execute(sql_sp_total_insert,(user_name, user_phone, ct, startorfinish, itemNo)) 
         board_db.commit()
 
         
         finish_time = datetime.datetime.strptime(dicFinishTime[bandId],'%Y-%m-%d %H:%M:%S')
         start_time = datetime.datetime.strptime(dicStartTime[bandId],'%Y-%m-%d %H:%M:%S')
         dicLabTime[bandId] = finish_time - start_time
+        bonus = 0
+        if dicLabTime[bandId].total_seconds() < str2sec('00:05:00'):
+            bonus = str2sec("00:05:00") - dicLabTime[bandId].total_seconds()
+            print("bonus", bonus)
+            bonus = bonus * 10
 
-        if itemNo == 3:
+
+        if itemNo == '003':
             print("finish left")
-            cursor.execute(sql_sp_score_left_update,(bandId, dicTagCnt[bandId], dicTagScore[bandId],dicLabTime[bandId])) 
+            cursor.execute(sql_sp_score_left_update,(user_name, dicTagCnt[bandId], dicTagScore[bandId],dicLabTime[bandId])) 
         else:
             print("finish right")
-            cursor.execute(sql_sp_score_right_update,(bandId, dicTagCnt[bandId], dicTagScore[bandId],dicLabTime[bandId])) 
+            cursor.execute(sql_sp_score_right_update,(user_name, dicTagCnt[bandId], dicTagScore[bandId],dicLabTime[bandId])) 
         
         board_db.commit()   
+
+        #user_name, user_phone, log_time, sex, score_sum
+        cursor.execute(sql_sp_sum_insert,(user_name, user_phone, ct, sex, dicTagScore[bandId]+bonus)) 
+        board_db.commit()
         
         del dicStartTime[bandId]
         del dicFinishTime[bandId]
@@ -338,20 +363,22 @@ def parsing_data(data):
         start_time = datetime.datetime.strptime(dicStartTime[bandId],'%Y-%m-%d %H:%M:%S')
         dicLabTime[bandId] = finish_time - start_time
     
+        print("LAB time", dicLabTime[bandId])
 
-        dicTagCnt[bandId] += 1
+        if dicLabTime[bandId].total_seconds() < str2sec('00:05:00'):
+            dicTagCnt[bandId] += 1
 
-        if startorfinish == 2:
-            dicTagScore[bandId] = dicTagScore[bandId] + 10
-        elif startorfinish == 3:
-            dicTagScore[bandId] = dicTagScore[bandId] + 30
-        elif startorfinish == 4:
-            dicTagScore[bandId] = dicTagScore[bandId] + 50
-        else:
-            dicTagScore[bandId] = dicTagScore[bandId] + 100
-        
-        cursor.execute(sql_sp_total_insert,(bandId, "0000", ct, startorfinish, itemNo)) 
-        board_db.commit() 
+            if startorfinish == 2:
+                dicTagScore[bandId] = dicTagScore[bandId] + 10
+            elif startorfinish == 3:
+                dicTagScore[bandId] = dicTagScore[bandId] + 30
+            elif startorfinish == 4:
+                dicTagScore[bandId] = dicTagScore[bandId] + 50
+            else:
+                dicTagScore[bandId] = dicTagScore[bandId] + 100
+            
+            cursor.execute(sql_sp_total_insert,(user_name, user_phone, ct, startorfinish, itemNo)) 
+            board_db.commit() 
         
 
         if itemNo == '045' or itemNo == '046':
@@ -363,27 +390,27 @@ def parsing_data(data):
                 midCnt = 1
 
             if midCnt == 1:
-                cursor.execute(sql_mid_score_01_update,(bandId, dicTagCnt[bandId], dicLabTime[bandId])) 
+                cursor.execute(sql_mid_score_01_update,(user_name, dicTagCnt[bandId], dicLabTime[bandId])) 
             elif midCnt == 2:
-                cursor.execute(sql_mid_score_02_update,(bandId, dicTagCnt[bandId], dicLabTime[bandId])) 
+                cursor.execute(sql_mid_score_02_update,(user_name, dicTagCnt[bandId], dicLabTime[bandId])) 
             elif midCnt == 3:
-                cursor.execute(sql_mid_score_03_update,(bandId, dicTagCnt[bandId], dicLabTime[bandId])) 
+                cursor.execute(sql_mid_score_03_update,(user_name, dicTagCnt[bandId], dicLabTime[bandId])) 
             elif midCnt == 4:
-                cursor.execute(sql_mid_score_04_update,(bandId, dicTagCnt[bandId], dicLabTime[bandId])) 
+                cursor.execute(sql_mid_score_04_update,(user_name, dicTagCnt[bandId], dicLabTime[bandId])) 
             elif midCnt == 5:
-                cursor.execute(sql_mid_score_05_update,(bandId, dicTagCnt[bandId], dicLabTime[bandId]))         
+                cursor.execute(sql_mid_score_05_update,(user_name, dicTagCnt[bandId], dicLabTime[bandId]))         
             elif midCnt == 6:
-                cursor.execute(sql_mid_score_06_update,(bandId, dicTagCnt[bandId], dicLabTime[bandId])) 
+                cursor.execute(sql_mid_score_06_update,(user_name, dicTagCnt[bandId], dicLabTime[bandId])) 
             elif midCnt == 7:
-                cursor.execute(sql_mid_score_07_update,(bandId, dicTagCnt[bandId], dicLabTime[bandId]))  
+                cursor.execute(sql_mid_score_07_update,(user_name, dicTagCnt[bandId], dicLabTime[bandId]))  
             elif midCnt == 8:
-                cursor.execute(sql_mid_score_08_update,(bandId, dicTagCnt[bandId], dicLabTime[bandId])) 
+                cursor.execute(sql_mid_score_08_update,(user_name, dicTagCnt[bandId], dicLabTime[bandId])) 
             elif midCnt == 9:
-                cursor.execute(sql_mid_score_09_update,(bandId, dicTagCnt[bandId], dicLabTime[bandId])) 
+                cursor.execute(sql_mid_score_09_update,(user_name, dicTagCnt[bandId], dicLabTime[bandId])) 
             elif midCnt == 10:
-                cursor.execute(sql_mid_score_10_update,(bandId, dicTagCnt[bandId], dicLabTime[bandId])) 
+                cursor.execute(sql_mid_score_10_update,(user_name, dicTagCnt[bandId], dicLabTime[bandId])) 
             board_db.commit() 
-#본 쓰레드
+
 def readThread(ser):
     global line
     global exitThread
@@ -392,12 +419,8 @@ def readThread(ser):
     rxcnt = 0
 
 
-    # 쓰레드 종료될때까지 계속 돌림
     while not exitThread:
-        #데이터가 있있다면
-        
         for c in ser.read():
-            #line 변수에 차곡차곡 추가하여 넣는다.
             rxcnt +=1
             if c==255:
                 print(rxcnt, c)
@@ -415,30 +438,26 @@ def readThread(ser):
             cnt = cnt + 1
 
             #print(cnt)
-            if c == 69 and cnt == 20: #라인의 끝을 만나면.. 'E'
+            if c == 69 and cnt == 20: 
 
                 if len(line) == 20:
-                    #데이터 처리 함수로 호출
                     parsing_data(line)
                 else:
                     print("ng str:", line)
                     print("ng len :",  len(line))
                     parsing_data(line[-20:])
 
-                #line 변수 초기화
                 rxcnt = 0
                 del line[:]   
 
 
 
 if __name__ == "__main__" :
-        #종료 시그널 등록
     signal.signal(signal.SIGINT, handler)
 
-    #시리얼 열기
     ser = serial.Serial(port, baud, timeout=0)
 
-    #시리얼 읽을 쓰레드 생성
     thread = threading.Thread(target=readThread, args=(ser,))
-    #시작!
+
+
     thread.start()
