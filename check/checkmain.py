@@ -79,6 +79,8 @@ sql_sw_total_s_update = "update sw_score_total set log_time_f = %s, log_score = 
 sql_sw_score_update = "update sw_score set log_name = %s, log_score = %s" 
 
 sql_sw_check_update = "update sw_check set c_score = %s, c_name = %s, c_runtime = %s" 
+sql_sw_check_update_r = "update sw_check set n01_n = %s, n01_s = %s, n02_n = %s, n02_s = %s, n03_n = %s, n03_s = %s, n04_n = %s, n04_s = %s, n05_n = %s, n05_s = %s" 
+sql_sw_check_update_mtop = "update sw_check set m01_n = %s, m01_s = %s, m02_n = %s, m02_s = %s, m03_n = %s, m03_s = %s, m04_n = %s, m04_s = %s, m05_n = %s, m05_s = %s" 
 sql_climbing_check_update = "update climbing_check set i1_cs = %s, i2_cs = %s, i3_cs = %s, i4_cs = %s, i5_cs = %s" 
 
 sql_sw_check_get_phone = "select * from user_band where bandId = %s" 
@@ -86,6 +88,9 @@ sql_sw_check_get_score = "select log_score from sw_score_total where log_name = 
 sql_climbing_check_get_score = "select log_item1_time, log_item2_time, log_item3_time, log_item4_time, log_item5_time from climbing_score_total where log_name = %s and log_phone=%s order by log_time DESC limit 1" 
 sql_sp_check_get_score = "select tag_num, score, labtime from sp_score_rank where user_name = %s and user_phone=%s order by log_time DESC limit 1" 
 sql_sp_check_get_score_r = "select user_name, tag_num, labtime, score from sp_score_rank order by log_time DESC limit 5" 
+sql_sw_check_get_score_top = "select log_name, log_score from sw_score_total where log_sex= %s order by log_score ASC limit 5" 
+sql_sw_check_get_score_r = "select log_name, log_score from sw_score_total order by log_score DESC limit 5" 
+
 sql_sp_check_cupdate = "update sp_check set c_name = %s, c_tag_num = %s, c_score = %s, c_time = %s, c_runtime = %s" 
 sql_sp_check_n1update = "update sp_check set n1_n = %s, n1_tag_num = %s, n1_score = %s, n1_time = %s" 
 sql_sp_check_n2update = "update sp_check set n2_n = %s, n2_tag_num = %s, n2_score = %s, n2_time = %s" 
@@ -181,6 +186,21 @@ def parsing_data(data):
             cursor.execute(sql_sw_check_update,(user_score, user_name, c_runtime)) 
             board_db.commit()
 
+            cursor.execute(sql_sw_check_get_score_r) 
+            result = cursor.fetchall()
+            df = pd.DataFrame(result)
+            df['log_score'] = df['log_score'].astype(str).map(lambda x: x[7:])
+
+            cursor.execute(sql_sw_check_update_r,(df.iloc[0,0], df.iloc[0,1], df.iloc[1,0], df.iloc[1,1], df.iloc[2,0], df.iloc[2,1], df.iloc[3,0], df.iloc[3,1], df.iloc[4,0], df.iloc[4,1]))
+            board_db.commit() 
+
+            cursor.execute(sql_sw_check_get_score_top,("1")) 
+            result = cursor.fetchall()
+            df = pd.DataFrame(result)
+            df['log_score'] = df['log_score'].astype(str).map(lambda x: x[7:])
+
+            cursor.execute(sql_sw_check_update_mtop,(df.iloc[0,0], df.iloc[0,1], df.iloc[1,0], df.iloc[1,1], df.iloc[2,0], df.iloc[2,1], df.iloc[3,0], df.iloc[3,1], df.iloc[4,0], df.iloc[4,1]))
+            board_db.commit() 
 
 
         elif itemNo == '001':     # climbing
