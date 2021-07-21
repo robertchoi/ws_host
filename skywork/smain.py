@@ -1,3 +1,4 @@
+#-*- coding:utf-8 -*-
 import sys
 import serial
 import time
@@ -105,29 +106,29 @@ def parsing_data(data):
 
     if startorfinish == '1': # '1' 
         print('start')
-        #cursor.execute(sql_findName,bandId) 
-        #result = cursor.fetchall()
-        #df = pd.DataFrame(result)
-        #user_name = df.iloc[0,0]
+        cursor.execute(sql_findName,bandId) 
+        result = cursor.fetchall()
+        df = pd.DataFrame(result)
+        user_name = df.iloc[0,0]
         #print(user_name)
 
         score = 0
-        cursor.execute(sql_sw_score_update,(bandId, score)) 
+        cursor.execute(sql_sw_score_update,(user_name, score)) 
         board_db.commit()
 
         dicTime[bandId] = ct
         print(ct)
-        cursor.execute(sql_sw_total_s_insert,(bandId, ct)) 
+        cursor.execute(sql_sw_total_s_insert,(user_name, ct)) 
         board_db.commit()
         dicTime[bandId]=ct
         print(dicTime)
 
     elif startorfinish == '9': # '9' 
         print('finish')
-        #cursor.execute(sql_findName,bandId) 
-        #result = cursor.fetchall()
-        #df = pd.DataFrame(result)
-        #user_name = df.iloc[0,0]
+        cursor.execute(sql_findName,bandId) 
+        result = cursor.fetchall()
+        df = pd.DataFrame(result)
+        user_name = df.iloc[0,0]
         #print(user_name)
 
         print(dicTime)
@@ -145,7 +146,7 @@ def parsing_data(data):
         cursor.execute(sql_sw_total_s_update,(ct, score, dicTime[bandId])) 
         board_db.commit()
  
-        cursor.execute(sql_sw_score_update,(bandId, score)) 
+        cursor.execute(sql_sw_score_update,(user_name, score)) 
         board_db.commit()
         del dicTime[bandId]
 
