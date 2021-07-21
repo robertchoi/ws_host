@@ -1,3 +1,4 @@
+#-*- coding:utf-8 -*-
 import sys
 import serial
 import time
@@ -250,6 +251,14 @@ def parsing_data(data):
     
     if startorfinish == '7':
         print('Enter')
+
+        cursor.execute(sql_findName,bandId) 
+        result = cursor.fetchall()
+        df = pd.DataFrame(result)
+        user_name = df.iloc[0,0]
+        #print("user_name", user_name)
+
+
         global entryCnt
         entryCnt += 1
         if entryCnt <= 20:
@@ -257,49 +266,51 @@ def parsing_data(data):
                 global ct_global
                 dicTime['logTime'] = ct
                 ct_global = ct
-                cursor.execute(sql_climbing_user1_update,bandId) 
+                #cursor.execute(sql_climbing_user1_update,bandId)
+                cursor.execute(sql_climbing_user1_update,user_name)  
             elif entryCnt == 2:
-                cursor.execute(sql_climbing_user2_update,bandId) 
+                cursor.execute(sql_climbing_user2_update,user_name) 
             elif entryCnt == 3:
-                cursor.execute(sql_climbing_user3_update,bandId) 
+                cursor.execute(sql_climbing_user3_update,user_name) 
             elif entryCnt == 4:
-                cursor.execute(sql_climbing_user4_update,bandId) 
+                cursor.execute(sql_climbing_user4_update,user_name) 
             elif entryCnt == 5:
-                cursor.execute(sql_climbing_user5_update,bandId) 
+                cursor.execute(sql_climbing_user5_update,user_name) 
             elif entryCnt == 6:
-                cursor.execute(sql_climbing_user6_update,bandId) 
+                cursor.execute(sql_climbing_user6_update,user_name) 
             elif entryCnt == 7:
-                cursor.execute(sql_climbing_user7_update,bandId) 
+                cursor.execute(sql_climbing_user7_update,user_name) 
             elif entryCnt == 8:
-                cursor.execute(sql_climbing_user8_update,bandId) 
+                cursor.execute(sql_climbing_user8_update,user_name) 
             elif entryCnt == 9:
-                cursor.execute(sql_climbing_user9_update,bandId) 
+                cursor.execute(sql_climbing_user9_update,user_name) 
             elif entryCnt == 10:
-                cursor.execute(sql_climbing_user10_update,bandId) 
+                cursor.execute(sql_climbing_user10_update,user_name) 
             elif entryCnt == 11:
-                cursor.execute(sql_climbing_user11_update,bandId) 
+                cursor.execute(sql_climbing_user11_update,user_name) 
             elif entryCnt == 12:
-                cursor.execute(sql_climbing_user12_update,bandId) 
+                cursor.execute(sql_climbing_user12_update,user_name) 
             elif entryCnt == 13:
-                cursor.execute(sql_climbing_user13_update,bandId) 
+                cursor.execute(sql_climbing_user13_update,user_name) 
             elif entryCnt == 14:
-                cursor.execute(sql_climbing_user14_update,bandId) 
+                cursor.execute(sql_climbing_user14_update,user_name) 
             elif entryCnt == 15:
-                cursor.execute(sql_climbing_user15_update,bandId) 
+                cursor.execute(sql_climbing_user15_update,user_name) 
             elif entryCnt == 16:
-                cursor.execute(sql_climbing_user16_update,bandId) 
+                cursor.execute(sql_climbing_user16_update,user_name) 
             elif entryCnt == 17:
-                cursor.execute(sql_climbing_user17_update,bandId) 
+                cursor.execute(sql_climbing_user17_update,user_name) 
             elif entryCnt == 18:
-                cursor.execute(sql_climbing_user18_update,bandId) 
+                cursor.execute(sql_climbing_user18_update,user_name) 
             elif entryCnt == 19:
-                cursor.execute(sql_climbing_user19_update,bandId) 
+                cursor.execute(sql_climbing_user19_update,user_name) 
             else:
-                cursor.execute(sql_climbing_user20_update,bandId) 
+                cursor.execute(sql_climbing_user20_update,user_name) 
             
             board_db.commit()
+            dicTime[bandId] = ct
 
-            cursor.execute(sql_climbing_total_logtime_insert,(ct_global, bandId)) 
+            cursor.execute(sql_climbing_total_logtime_insert,(ct_global, user_name)) 
             board_db.commit()
             print(dicTime)
 
@@ -309,32 +320,38 @@ def parsing_data(data):
         if entryCnt == 0:
             print("Entry 0")
             return
-        #cursor.execute(sql_findName,bandId) 
-        #result = cursor.fetchall()
-        #df = pd.DataFrame(result)
-        #user_name = df.iloc[0,0]
+        cursor.execute(sql_findName,bandId) 
+        result = cursor.fetchall()
+        df = pd.DataFrame(result)
+        user_name = df.iloc[0,0]
         #print(user_name)
 
         dicTime[bandId] = ct
         print(ct)
-        print(dicTime)
+        print("dicTime", dicTime)
         print(entryCnt)
+
+        userIndex = list(dicTime.keys()).index(bandId)
+        print("userIndex", userIndex)
+
+
+
 
         logTime = datetime.datetime.strptime(dicTime['logTime'],'%Y-%m-%d %H:%M:%S')
 
         print(type(logTime))
         if itemNo == '001':
-            cursor.execute(sql_climbing_total_item1s_insert,(ct, logTime, bandId)) 
+            cursor.execute(sql_climbing_total_item1s_insert,(ct, logTime, user_name)) 
         elif itemNo == '002':
-            cursor.execute(sql_climbing_total_item2s_insert,(ct, logTime, bandId)) 
+            cursor.execute(sql_climbing_total_item2s_insert,(ct, logTime, user_name)) 
         elif itemNo == '003':
-            cursor.execute(sql_climbing_total_item3s_insert,(ct, logTime, bandId)) 
+            cursor.execute(sql_climbing_total_item3s_insert,(ct, logTime, user_name)) 
         elif itemNo == '004':
-            cursor.execute(sql_climbing_total_item4s_insert,(ct, logTime, bandId)) 
+            cursor.execute(sql_climbing_total_item4s_insert,(ct, logTime, user_name)) 
         elif itemNo == '005':
-            cursor.execute(sql_climbing_total_item4s_insert,(ct, logTime, bandId)) 
+            cursor.execute(sql_climbing_total_item4s_insert,(ct, logTime, user_name)) 
         else:
-            cursor.execute(sql_climbing_total_item5s_insert,(ct, logTime, bandId)) 
+            cursor.execute(sql_climbing_total_item5s_insert,(ct, logTime, user_name)) 
         board_db.commit()
         dicTime[bandId]=ct
         print(dicTime)
@@ -346,10 +363,10 @@ def parsing_data(data):
             print("Entry 0")
             return
 
-        #cursor.execute(sql_findName,bandId) 
-        #result = cursor.fetchall()
-        #df = pd.DataFrame(result)
-        #user_name = df.iloc[0,0]
+        cursor.execute(sql_findName,bandId) 
+        result = cursor.fetchall()
+        df = pd.DataFrame(result)
+        user_name = df.iloc[0,0]
         #print(user_name)
         
         print(ct)
@@ -360,21 +377,21 @@ def parsing_data(data):
         print(score)
         print(finish_time, start_time, score)
         if itemNo == '001':
-            cursor.execute(sql_climbing_total_item1f_insert,(ct, score, logTime, bandId)) 
+            cursor.execute(sql_climbing_total_item1f_insert,(ct, score, logTime, user_name)) 
         elif itemNo == '002':
-            cursor.execute(sql_climbing_total_item2f_insert,(ct, score, logTime, bandId)) 
+            cursor.execute(sql_climbing_total_item2f_insert,(ct, score, logTime, user_name)) 
         elif itemNo == '003':
-            cursor.execute(sql_climbing_total_item3f_insert,(ct, score, logTime, bandId)) 
+            cursor.execute(sql_climbing_total_item3f_insert,(ct, score, logTime, user_name)) 
         elif itemNo == '004':
-            cursor.execute(sql_climbing_total_item4f_insert,(ct, score, logTime, bandId)) 
+            cursor.execute(sql_climbing_total_item4f_insert,(ct, score, logTime, user_name)) 
         elif itemNo == '005':
-            cursor.execute(sql_climbing_total_item4f_insert,(ct, score, logTime, bandId)) 
+            cursor.execute(sql_climbing_total_item4f_insert,(ct, score, logTime, user_name)) 
         else:
-            cursor.execute(sql_climbing_total_item5f_insert,(ct, score, logTime, bandId)) 
+            cursor.execute(sql_climbing_total_item5f_insert,(ct, score, logTime, user_name)) 
         board_db.commit()
  
         userIndex = list(dicTime.keys()).index(bandId)
-        print(userIndex)
+        print("userIndex", userIndex)
 
         if userIndex == 1:
             if itemNo == '001':
