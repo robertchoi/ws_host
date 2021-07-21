@@ -73,7 +73,7 @@ cursor = board_db.cursor(pymysql.cursors.DictCursor)
 
 sql = "select * from sw_score;"
 sql_insert = "insert into score (id, timelog, tagvalue, tagname) VALUES (%s, %s, %s, %s)" 
-sql_findName  = "select user_name from user_band where bandId = %s"
+sql_findName  = "select user_name, user_phone, sex from user_band where bandId = %s"
 sql_sw_total_s_insert = "insert into sw_score_total (log_name, log_time_s) VALUES (%s, %s)" 
 sql_sw_total_s_update = "update sw_score_total set log_time_f = %s, log_score = %s where log_time_s = %s" 
 sql_sw_score_update = "update sw_score set log_name = %s, log_score = %s" 
@@ -84,7 +84,20 @@ sql_climbing_check_update = "update climbing_check set i1_cs = %s, i2_cs = %s, i
 sql_sw_check_get_phone = "select * from user_band where bandId = %s" 
 sql_sw_check_get_score = "select log_score from sw_score_total where log_name = %s and log_phone=%s order by log_time_f DESC limit 1" 
 sql_climbing_check_get_score = "select log_item1_time, log_item2_time, log_item3_time, log_item4_time, log_item5_time from climbing_score_total where log_name = %s and log_phone=%s order by log_time DESC limit 1" 
-sql_sp_check_get_score = "select c_name, c_tag_num, c_score, c_time, c_runtime from sp_score_total where log_name = %s and log_phone=%s order by log_time DESC limit 1" 
+sql_sp_check_get_score = "select tag_num, score, labtime from sp_score_rank where user_name = %s and user_phone=%s order by log_time DESC limit 1" 
+sql_sp_check_get_score_r = "select user_name, tag_num, labtime, score from sp_score_rank order by log_time DESC limit 5" 
+sql_sp_check_cupdate = "update sp_check set c_name = %s, c_tag_num = %s, c_score = %s, c_time = %s, c_runtime = %s" 
+sql_sp_check_n1update = "update sp_check set n1_n = %s, n1_tag_num = %s, n1_score = %s, n1_time = %s" 
+sql_sp_check_n2update = "update sp_check set n2_n = %s, n2_tag_num = %s, n2_score = %s, n2_time = %s" 
+sql_sp_check_n3update = "update sp_check set n3_n = %s, n3_tag_num = %s, n3_score = %s, n3_time = %s" 
+sql_sp_check_n4update = "update sp_check set n4_n = %s, n4_tag_num = %s, n4_score = %s, n4_time = %s" 
+sql_sp_check_n5update = "update sp_check set n5_n = %s, n5_tag_num = %s, n5_score = %s, n5_time = %s" 
+
+sql_sp_check_mtop_update = "update sp_check set m1_n = %s, m1_s = %s, m2_n = %s, m2_s = %s, m3_n = %s, m3_s = %s, m4_n = %s, m4_s = %s, m5_n = %s, m5_s = %s" 
+sql_sp_check_wtop_update = "update sp_check set w1_n = %s, w1_s = %s, w2_n = %s, w2_s = %s, w3_n = %s, w3_s = %s, w4_n = %s, w4_s = %s, w5_n = %s, w5_s = %s" 
+
+
+sql_sp_check_get_score_top = "select user_name, score_sum from sp_score_rank where sex= %s order by score_sum DESC limit 5" 
 
 
 #쓰레드 종료용 시그널 함수
@@ -125,10 +138,13 @@ def parsing_data(data):
 
     if startorfinish == '8': # '1' 
         print('check')
-        #cursor.execute(sql_findName,bandId) 
-        #result = cursor.fetchall()
-        #df = pd.DataFrame(result)
-        #user_name = df.iloc[0,0]
+        cursor.execute(sql_findName,bandId) 
+        result = cursor.fetchall()
+        df = pd.DataFrame(result)
+        if df.empty:
+            print('DataFrame is empty!')
+            return
+        user_name = df.iloc[0,0]
         #print(user_name)
 
         cursor.execute(sql_sw_check_get_phone,(bandId)) 
@@ -148,10 +164,14 @@ def parsing_data(data):
         if itemNo == '002':     # skywork
             print("002")
 
-            cursor.execute(sql_sw_check_get_score,(bandId, user_phone)) 
+            cursor.execute(sql_sw_check_get_score,(user_name, user_phone)) 
             result = cursor.fetchall()
             df = pd.DataFrame(result)
             print(df)
+            if df.empty:
+                print('DataFrame is empty!')
+                return
+
             df['log_score'] = df['log_score'].astype(str).map(lambda x: x[7:])
             user_score = df.iloc[0,0]
             print(type(user_score))
@@ -162,13 +182,18 @@ def parsing_data(data):
             board_db.commit()
 
 
+
         elif itemNo == '001':     # climbing
             print("001")
             #sql_climbing_check_get_score
-            cursor.execute(sql_climbing_check_get_score,(bandId, user_phone)) 
+            cursor.execute(sql_climbing_check_get_score,(user_name, user_phone)) 
             result = cursor.fetchall()
             df = pd.DataFrame(result)
             print(df)
+            if df.empty:
+                print('DataFrame is empty!')
+                return
+
             df['log_item1_time'] = df['log_item1_time'].astype(str).map(lambda x: x[7:])
             df['log_item2_time'] = df['log_item2_time'].astype(str).map(lambda x: x[7:])
             df['log_item3_time'] = df['log_item3_time'].astype(str).map(lambda x: x[7:])
@@ -186,6 +211,56 @@ def parsing_data(data):
 
         elif itemNo == '003':     # speed tap
             print("003")
+            #tag_num, score, labtime
+            cursor.execute(sql_sp_check_get_score,(user_name, user_phone)) 
+            result = cursor.fetchall()
+            df = pd.DataFrame(result)
+            print(df)  
+            if df.empty:
+                print('DataFrame is empty!')
+                return 
+            df['labtime'] = df['labtime'].astype(str).map(lambda x: x[7:])
+            tag_num = df.iloc[0,0]
+            score = df.iloc[0,1]    
+            labtime = df.iloc[0,2]
+
+            cursor.execute(sql_sp_check_cupdate,(user_name, tag_num, score, labtime, c_runtime)) 
+            board_db.commit() 
+
+            #user_name, tag_num, labtime, score
+            cursor.execute(sql_sp_check_get_score_r) 
+            result = cursor.fetchall()
+            df = pd.DataFrame(result)
+            #print(df)  
+            print("tag_num", df.iloc[0,1])
+            print("labtime", df.iloc[0,2])
+            print("score", df.iloc[0,3])
+            df['labtime'] = df['labtime'].astype(str).map(lambda x: x[7:])
+
+
+            cursor.execute(sql_sp_check_n1update,(df.iloc[0,0], df.iloc[0,1], df.iloc[0,3], str(df.iloc[0,2]))) 
+            cursor.execute(sql_sp_check_n2update,(df.iloc[1,0], df.iloc[1,1], df.iloc[1,3], str(df.iloc[1,2]))) 
+            cursor.execute(sql_sp_check_n3update,(df.iloc[2,0], df.iloc[2,1], df.iloc[2,3], str(df.iloc[2,2]))) 
+            cursor.execute(sql_sp_check_n4update,(df.iloc[3,0], df.iloc[3,1], df.iloc[3,3], str(df.iloc[3,2]))) 
+            cursor.execute(sql_sp_check_n5update,(df.iloc[4,0], df.iloc[4,1], df.iloc[4,3], str(df.iloc[4,2]))) 
+            board_db.commit() 
+
+            
+            cursor.execute(sql_sp_check_get_score_top, "1") 
+            result = cursor.fetchall()
+            df = pd.DataFrame(result)
+
+            cursor.execute(sql_sp_check_mtop_update,(df.iloc[0,0], df.iloc[0,1], df.iloc[1,0], df.iloc[1,1], df.iloc[2,0], df.iloc[2,1], df.iloc[3,0], df.iloc[3,1], df.iloc[4,0], df.iloc[4,1]))
+            board_db.commit() 
+
+            '''
+            cursor.execute(sql_sp_check_get_score_top, "2") 
+            result = cursor.fetchall()
+            df = pd.DataFrame(result)
+
+            cursor.execute(sql_sp_check_wtop_update,(df.iloc[0,0], df.iloc[0,1], df.iloc[1,0], df.iloc[1,1], df.iloc[2,0], df.iloc[2,1], df.iloc[3,0], df.iloc[3,1], df.iloc[4,0], df.iloc[4,1]))
+            board_db.commit() 
+            '''
 
 
 
