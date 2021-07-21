@@ -130,7 +130,7 @@ def parsing_data(data):
         df = pd.DataFrame(result)
         user_name = df.iloc[0,0]
         user_phone = df.iloc[0,1]
-        sex = df.iloc[0,3]
+        sex = df.iloc[0,2]
         #print(user_name)
 
         print(dicTime)
@@ -145,7 +145,7 @@ def parsing_data(data):
         score = finish_time - start_time
         print(score)
         print(finish_time, start_time)
-        cursor.execute(sql_sw_total_s_update,(ct, score, dicTime[bandId]), sex, user_phone) 
+        cursor.execute(sql_sw_total_s_update,(ct, score, dicTime[bandId], sex, user_phone))
         board_db.commit()
  
         cursor.execute(sql_sw_score_update,(user_name, score)) 
