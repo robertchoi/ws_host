@@ -98,11 +98,14 @@ sql_sp_check_n3update = "update sp_check set n3_n = %s, n3_tag_num = %s, n3_scor
 sql_sp_check_n4update = "update sp_check set n4_n = %s, n4_tag_num = %s, n4_score = %s, n4_time = %s" 
 sql_sp_check_n5update = "update sp_check set n5_n = %s, n5_tag_num = %s, n5_score = %s, n5_time = %s" 
 
-sql_sp_check_mtop_update = "update sp_check set m1_n = %s, m1_s = %s, m2_n = %s, m2_s = %s, m3_n = %s, m3_s = %s, m4_n = %s, m4_s = %s, m5_n = %s, m5_s = %s" 
-sql_sp_check_wtop_update = "update sp_check set w1_n = %s, w1_s = %s, w2_n = %s, w2_s = %s, w3_n = %s, w3_s = %s, w4_n = %s, w4_s = %s, w5_n = %s, w5_s = %s" 
+sql_sp_check_m1top_update = "update sp_check set m1_n = %s, m1_s = %s, m2_n = %s, m2_s = %s, m3_n = %s, m3_s = %s, m4_n = %s, m4_s = %s, m5_n = %s, m5_s = %s" 
+sql_sp_check_m6top_update = "update sp_check set m6_n = %s, m6_s = %s, m7_n = %s, m7_s = %s, m8_n = %s, m8_s = %s, m9_n = %s, m9_s = %s, m10_n = %s, m10_s = %s" 
+sql_sp_check_m11top_update = "update sp_check set m11_n = %s, m11_s = %s, m12_n = %s, m12_s = %s, m13_n = %s, m13_s = %s, m14_n = %s, m14_s = %s, m15_n = %s, m15_s = %s" 
+
+sql_sp_check_w1top_update = "update sp_check set w1_n = %s, w1_s = %s, w2_n = %s, w2_s = %s, w3_n = %s, w3_s = %s, w4_n = %s, w4_s = %s, w5_n = %s, w5_s = %s" 
 
 
-sql_sp_check_get_score_top = "select user_name, score_sum from sp_score_rank where sex= %s order by score_sum DESC limit 5" 
+sql_sp_check_get_score_top = "select user_name, score_sum from sp_score_rank where sex= %s order by score_sum DESC limit 15" 
 
 
 #쓰레드 종료용 시그널 함수
@@ -226,6 +229,12 @@ def parsing_data(data):
             item4_time = df.iloc[0,3]
             item5_time = df.iloc[0,4]
 
+            print("item1_time", item1_time)
+            print("item2_time", item2_time)
+            print("item3_time", item3_time)
+            print("item4_time", item4_time)
+            print("item5_time", item5_time)
+
             cursor.execute(sql_climbing_check_update,(item1_time, item2_time, item3_time, item4_time, item5_time)) 
             board_db.commit()
 
@@ -270,17 +279,20 @@ def parsing_data(data):
             result = cursor.fetchall()
             df = pd.DataFrame(result)
 
-            cursor.execute(sql_sp_check_mtop_update,(df.iloc[0,0], df.iloc[0,1], df.iloc[1,0], df.iloc[1,1], df.iloc[2,0], df.iloc[2,1], df.iloc[3,0], df.iloc[3,1], df.iloc[4,0], df.iloc[4,1]))
+            cursor.execute(sql_sp_check_m1top_update,(df.iloc[0,0], df.iloc[0,1], df.iloc[1,0], df.iloc[1,1], df.iloc[2,0], df.iloc[2,1], df.iloc[3,0], df.iloc[3,1], df.iloc[4,0], df.iloc[4,1]))
+            cursor.execute(sql_sp_check_m6top_update,(df.iloc[5,0], df.iloc[5,1], df.iloc[6,0], df.iloc[6,1], df.iloc[7,0], df.iloc[7,1], df.iloc[8,0], df.iloc[8,1], df.iloc[9,0], df.iloc[9,1]))
+            #cursor.execute(sql_sp_check_m11top_update,(df.iloc[10,0], df.iloc[10,1], df.iloc[11,0], df.iloc[11,1], df.iloc[12,0], df.iloc[12,1], df.iloc[13,0], df.iloc[13,1], df.iloc[14,0], df.iloc[14,1]))
+            
             board_db.commit() 
 
-            '''
+            
             cursor.execute(sql_sp_check_get_score_top, "2") 
             result = cursor.fetchall()
             df = pd.DataFrame(result)
 
-            cursor.execute(sql_sp_check_wtop_update,(df.iloc[0,0], df.iloc[0,1], df.iloc[1,0], df.iloc[1,1], df.iloc[2,0], df.iloc[2,1], df.iloc[3,0], df.iloc[3,1], df.iloc[4,0], df.iloc[4,1]))
+            cursor.execute(sql_sp_check_w1top_update,(df.iloc[0,0], df.iloc[0,1], df.iloc[1,0], df.iloc[1,1], df.iloc[2,0], df.iloc[2,1], df.iloc[3,0], df.iloc[3,1], df.iloc[4,0], df.iloc[4,1]))
             board_db.commit() 
-            '''
+            
 
 
 
