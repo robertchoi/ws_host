@@ -81,7 +81,7 @@ sql_sw_score_update = "update sw_score set log_name = %s, log_score = %s"
 sql_climbing_init = "UPDATE climbing_score SET `item161_score` = '0', `item061_score` = '0', `item111_score` = '0', `item011_score` = '0', `user20_name` = 'user20', `user10_name` = 'user10', `user15_name` = 'user15', `user05_name` = 'user5', `user19_name` = 'user19', `user09_name` = 'user9', `user14_name` = 'user14', `user04_name` = 'user4', `item201_score` = '0', `item101_score` = '0', `item151_score` = '0', `item051_score` = '0', `user18_name` = 'user18', `user08_name` = 'user8', `user13_name` = 'user13', `user03_name` = 'user3', `item202_score` = '0', `item102_score` = '0', `item152_score` = '0', `item052_score` = '0', `item191_score` = '0', `item091_score` = '0', `item141_score` = '0', `item041_score` = '0', `item203_score` = '0', `item103_score` = '0', `item153_score` = '0', `item053_score` = '0', `user17_name` = 'user17', `user07_name` = 'user7', `user12_name` = 'user12', `user02_name` = 'user2', `item204_score` = '0', `item104_score` = '0', `item154_score` = '0', `item054_score` = '0', `item192_score` = '0', `item092_score` = '0', `item142_score` = '0', `item042_score` = '0', `item205_score` = '0', `item105_score` = '0', `item155_score` = '0', `item055_score` = '0', `item181_score` = '0', `item081_score` = '0', `item131_score` = '0', `item031_score` = '0', `item193_score` = '0', `item093_score` = '0', `item143_score` = '0', `item043_score` = '0', `user16_name` = 'user16', `user06_name` = 'user6', `user11_name` = 'user11', `user01_name` = 'user1', `item194_score` = '0', `item094_score` = '0', `item144_score` = '0', `item044_score` = '0', `item182_score` = '0', `item082_score` = '0', `item132_score` = '0', `item032_score` = '0', `item195_score` = '0', `item095_score` = '0', `item145_score` = '0', `item045_score` = '0', `item171_score` = '0', `item071_score` = '0', `item121_score` = '0', `item021_score` = '0', `item184_score` = '0', `item084_score` = '0', `item134_score` = '0', `item034_score` = '0', `item172_score` = '0', `item072_score` = '0', `item122_score` = '0', `item022_score` = '0', `item185_score` = '0', `item085_score` = '0', `item135_score` = '0', `item035_score` = '0', `item162_score` = '0', `item062_score` = '0', `item112_score` = '0', `item012_score` = '0', `item173_score` = '0', `item073_score` = '0', `item123_score` = '0', `item023_score` = '0', `item163_score` = '0', `item063_score` = '0', `item113_score` = '0', `item013_score` = '0', `item174_score` = '0', `item074_score` = '0', `item124_score` = '0', `item024_score` = '0', `item164_score` = '0', `item064_score` = '0', `item114_score` = '0', `item014_score` = '0', `item175_score` = '0', `item075_score` = '0', `item125_score` = '0', `item025_score` = '0', `item165_score` = '0', `item065_score` = '0', `item115_score` = '0', `item015_score` = '0', `item183_score` = '0', `item083_score` = '0', `item133_score` = '0'"
 
 sql_sp_total_insert = "insert into sp_score_total (log_name, log_phone, log_time, log_tag_type, log_tag_num) VALUES (%s, %s, %s, %s, %s)"  
-sql_sp_sum_insert = "insert into sp_score_rank (user_name, user_phone, log_time, sex, score_sum) VALUES (%s, %s, %s, %s, %s)"  
+sql_sp_sum_insert = "insert into sp_score_rank (user_name, user_phone, log_time, sex, score_sum, tag_num, score, labtime) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"  
 
 sql_sp_score_left_update = "UPDATE sp_score_left SET log_name=%s, log_sp_cnt=%s, log_sp_score=%s, log_sp_time=%s" 
 sql_sp_score_right_update = "UPDATE sp_score_right SET log_name=%s, log_sp_cnt=%s, log_sp_score=%s, log_sp_time=%s" 
@@ -277,19 +277,19 @@ def parsing_data(data):
         bandId = tmp[6:-1]
     print(itemNo)
     print(bandId)
+
+    cursor.execute(sql_findName,bandId) 
+    result = cursor.fetchall()
+    df = pd.DataFrame(result)
+    global user_name, user_phone, sex
+    user_name = df.iloc[0,0]
+    user_phone = df.iloc[0,1]
+    sex = df.iloc[0,2]
+    #print(user_name)
     
 
     if startorfinish == '1': # '1' 
         print('start')
-
-        cursor.execute(sql_findName,bandId) 
-        result = cursor.fetchall()
-        df = pd.DataFrame(result)
-        global user_name, user_phone, sex
-        user_name = df.iloc[0,0]
-        user_phone = df.iloc[0,1]
-        sex = df.iloc[0,2]
-        #print(user_name)
 
         dicStartTime[bandId] = ct
         dicTagCnt[bandId] = 0
@@ -338,7 +338,7 @@ def parsing_data(data):
         board_db.commit()   
 
         #user_name, user_phone, log_time, sex, score_sum
-        cursor.execute(sql_sp_sum_insert,(user_name, user_phone, ct, sex, dicTagScore[bandId]+bonus)) 
+        cursor.execute(sql_sp_sum_insert,(user_name, user_phone, ct, sex, dicTagScore[bandId]+bonus, dicTagCnt[bandId], dicTagScore[bandId], dicLabTime[bandId])) 
         board_db.commit()
         
         del dicStartTime[bandId]
