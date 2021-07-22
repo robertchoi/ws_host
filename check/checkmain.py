@@ -86,8 +86,8 @@ sql_climbing_check_update = "update climbing_check set i1_cs = %s, i2_cs = %s, i
 sql_sw_check_get_phone = "select * from user_band where bandId = %s" 
 sql_sw_check_get_score = "select log_score from sw_score_total where log_name = %s and log_phone=%s order by log_time_f DESC limit 1" 
 sql_climbing_check_get_score = "select log_item1_time, log_item2_time, log_item3_time, log_item4_time, log_item5_time from climbing_score_total where log_name = %s and log_phone=%s order by log_time DESC limit 1" 
-sql_sp_check_get_score = "select tag_num, score, labtime from sp_score_rank where user_name = %s and user_phone=%s order by log_time DESC limit 1" 
-sql_sp_check_get_score_r = "select user_name, tag_num, labtime, score from sp_score_rank order by log_time DESC limit 5" 
+sql_sp_check_get_score = "select tag_num, score_sum, labtime from sp_score_rank where user_name = %s and user_phone=%s order by log_time DESC limit 1" 
+sql_sp_check_get_score_r = "select user_name, tag_num, labtime, score_sum from sp_score_rank order by log_time DESC limit 5" 
 sql_sw_check_get_score_top = "select log_name, log_score from sw_score_total where log_sex= %s order by log_score ASC limit 5" 
 sql_sw_check_get_score_r = "select log_name, log_score from sw_score_total order by log_score DESC limit 5" 
 
