@@ -330,10 +330,10 @@ def parsing_data(data):
 
         if itemNo == '003':
             print("finish left")
-            cursor.execute(sql_sp_score_left_update,(user_name, dicTagCnt[bandId], dicTagScore[bandId],dicLabTime[bandId])) 
+            cursor.execute(sql_sp_score_left_update,(user_name, dicTagCnt[bandId], dicTagScore[bandId]+bonus,dicLabTime[bandId])) 
         else:
             print("finish right")
-            cursor.execute(sql_sp_score_right_update,(user_name, dicTagCnt[bandId], dicTagScore[bandId],dicLabTime[bandId])) 
+            cursor.execute(sql_sp_score_right_update,(user_name, dicTagCnt[bandId], dicTagScore[bandId]+bonus,dicLabTime[bandId])) 
         
         board_db.commit()   
 
@@ -368,11 +368,11 @@ def parsing_data(data):
         if dicLabTime[bandId].total_seconds() < str2sec('00:05:00'):
             dicTagCnt[bandId] += 1
 
-            if startorfinish == 2:
+            if startorfinish == '2':
                 dicTagScore[bandId] = dicTagScore[bandId] + 10
-            elif startorfinish == 3:
+            elif startorfinish == '3':
                 dicTagScore[bandId] = dicTagScore[bandId] + 30
-            elif startorfinish == 4:
+            elif startorfinish == '4':
                 dicTagScore[bandId] = dicTagScore[bandId] + 50
             else:
                 dicTagScore[bandId] = dicTagScore[bandId] + 100
