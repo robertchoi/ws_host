@@ -255,11 +255,18 @@ def parsing_data(data):
         cursor.execute(sql_findName,bandId) 
         result = cursor.fetchall()
         df = pd.DataFrame(result)
+        if df.empty:
+            print('DataFrame is empty!')
+            return
+
         user_name = df.iloc[0,0]
         user_phone = df.iloc[0,1]
         sex = df.iloc[0,2]
         #print("user_name", user_name)
 
+        if bandId in dicTime: 
+            print('already Enter!')
+            return     
 
         global entryCnt
         entryCnt += 1
@@ -325,6 +332,10 @@ def parsing_data(data):
         cursor.execute(sql_findName,bandId) 
         result = cursor.fetchall()
         df = pd.DataFrame(result)
+        if df.empty:
+            print('DataFrame is empty!')
+            return
+
         user_name = df.iloc[0,0]
         #print(user_name)
 
@@ -368,6 +379,10 @@ def parsing_data(data):
         cursor.execute(sql_findName,bandId) 
         result = cursor.fetchall()
         df = pd.DataFrame(result)
+        if df.empty:
+            print('DataFrame is empty!')
+            return
+
         user_name = df.iloc[0,0]
         user_phone = df.iloc[0,1]
         sex = df.iloc[0,2]
@@ -398,6 +413,7 @@ def parsing_data(data):
         print("userIndex", userIndex)
 
         if userIndex == 1:
+            print("userIndex", userIndex)
             if itemNo == '001':
                 cursor.execute(sql_climbing_score_011_update,score) 
             elif itemNo == '002':  
@@ -411,6 +427,7 @@ def parsing_data(data):
             else:
                 cursor.execute(sql_climbing_score_015_update,score)   
         elif userIndex == 2:
+            print("userIndex", userIndex)
             if itemNo == '001':
                 cursor.execute(sql_climbing_score_021_update,score) 
             elif itemNo == '002':  
