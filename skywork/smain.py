@@ -109,6 +109,10 @@ def parsing_data(data):
         cursor.execute(sql_findName,bandId) 
         result = cursor.fetchall()
         df = pd.DataFrame(result)
+        if df.empty:
+            print('DataFrame is empty!')
+            return
+
         user_name = df.iloc[0,0]
         #print(user_name)
 
@@ -128,6 +132,10 @@ def parsing_data(data):
         cursor.execute(sql_findName,bandId) 
         result = cursor.fetchall()
         df = pd.DataFrame(result)
+        if df.empty:
+            print('DataFrame is empty!')
+            return
+            
         user_name = df.iloc[0,0]
         user_phone = df.iloc[0,1]
         sex = df.iloc[0,2]
