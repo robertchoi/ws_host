@@ -351,12 +351,19 @@ def parsing_data(data):
         if entryCnt == 0:
             print("Entry 0")
             return
+
         cursor.execute(sql_findName,bandId) 
         result = cursor.fetchall()
         df = pd.DataFrame(result)
         if df.empty:
             print('DataFrame is empty!')
             return
+
+        value = dicTime.get(bandId)
+        if value == None:
+            print("Not Enter")
+            return
+        
 
         user_name = df.iloc[0,0]
         #print(user_name)
@@ -403,6 +410,11 @@ def parsing_data(data):
         df = pd.DataFrame(result)
         if df.empty:
             print('DataFrame is empty!')
+            return
+
+        value = dicTime.get(bandId)
+        if value == None:
+            print("Not Enter")
             return
 
         user_name = df.iloc[0,0]
