@@ -72,7 +72,29 @@ sql_sw_total_s_update = "update sw_score_total set log_time_f = %s, log_score = 
 sql_sw_score_update = "update sw_score set log_name = %s, log_score = %s" 
 
 
-sql_climbing_init = "UPDATE climbing_score SET `item161_score` = '0', `item061_score` = '0', `item111_score` = '0', `item011_score` = '0', `user20_name` = 'user20', `user10_name` = 'user10', `user15_name` = 'user15', `user05_name` = 'user5', `user19_name` = 'user19', `user09_name` = 'user9', `user14_name` = 'user14', `user04_name` = 'user4', `item201_score` = '0', `item101_score` = '0', `item151_score` = '0', `item051_score` = '0', `user18_name` = 'user18', `user08_name` = 'user8', `user13_name` = 'user13', `user03_name` = 'user3', `item202_score` = '0', `item102_score` = '0', `item152_score` = '0', `item052_score` = '0', `item191_score` = '0', `item091_score` = '0', `item141_score` = '0', `item041_score` = '0', `item203_score` = '0', `item103_score` = '0', `item153_score` = '0', `item053_score` = '0', `user17_name` = 'user17', `user07_name` = 'user7', `user12_name` = 'user12', `user02_name` = 'user2', `item204_score` = '0', `item104_score` = '0', `item154_score` = '0', `item054_score` = '0', `item192_score` = '0', `item092_score` = '0', `item142_score` = '0', `item042_score` = '0', `item205_score` = '0', `item105_score` = '0', `item155_score` = '0', `item055_score` = '0', `item181_score` = '0', `item081_score` = '0', `item131_score` = '0', `item031_score` = '0', `item193_score` = '0', `item093_score` = '0', `item143_score` = '0', `item043_score` = '0', `user16_name` = 'user16', `user06_name` = 'user6', `user11_name` = 'user11', `user01_name` = 'user1', `item194_score` = '0', `item094_score` = '0', `item144_score` = '0', `item044_score` = '0', `item182_score` = '0', `item082_score` = '0', `item132_score` = '0', `item032_score` = '0', `item195_score` = '0', `item095_score` = '0', `item145_score` = '0', `item045_score` = '0', `item171_score` = '0', `item071_score` = '0', `item121_score` = '0', `item021_score` = '0', `item184_score` = '0', `item084_score` = '0', `item134_score` = '0', `item034_score` = '0', `item172_score` = '0', `item072_score` = '0', `item122_score` = '0', `item022_score` = '0', `item185_score` = '0', `item085_score` = '0', `item135_score` = '0', `item035_score` = '0', `item162_score` = '0', `item062_score` = '0', `item112_score` = '0', `item012_score` = '0', `item173_score` = '0', `item073_score` = '0', `item123_score` = '0', `item023_score` = '0', `item163_score` = '0', `item063_score` = '0', `item113_score` = '0', `item013_score` = '0', `item174_score` = '0', `item074_score` = '0', `item124_score` = '0', `item024_score` = '0', `item164_score` = '0', `item064_score` = '0', `item114_score` = '0', `item014_score` = '0', `item175_score` = '0', `item075_score` = '0', `item125_score` = '0', `item025_score` = '0', `item165_score` = '0', `item065_score` = '0', `item115_score` = '0', `item015_score` = '0', `item183_score` = '0', `item083_score` = '0', `item133_score` = '0'"
+sql_climbing_init = "UPDATE climbing_score SET `item161_score` = '0', `item061_score` = '0', `item111_score` = '0', `item011_score` = '0', `user20_name` = 'user20', `user10_name` = 'user10', `user15_name` = 'user15', `user05_name` = 'user5', `user19_name` = 'user19', `user09_name` = 'user9', `user14_name` = 'user14', `user04_name` = 'user4', `item201_score` = '0', `item101_score` = '0', `item151_score` = '0', `item051_score` = '0', `user18_name` = 'user18', `user08_name` = 'user8', `user13_name` = 'user13', `user03_name` = 'user3', `item202_score` = '0', `item102_score` = '0', `item152_score` = '0', `item052_score` = '0', `item191_score` = '0', `item091_score` = '0', `item141_score` = '0', `item041_score` = '0', `item203_score` = '0', `item103_score` = '0', `item153_score` = '0', `item053_score` = '0', `user17_name` = 'user17', `user07_name` = 'user7', `user12_name` = 'user12', `user02_name` = 'user2', `item204_score` = '0', `item104_score` = '0', `item154_score` = '0', `item054_score` = '0', `item192_score` = '0', `item092_score` = '0', `item142_score` = '0', `item042_score` = '0', `item205_score` = '0', `item105_score` = '0', `item155_score` = '0', `item055_score` = '0', `item181_score` = '0', `item081_score` = '0', `item131_score` = '0', `item031_score` = '0', `item193_score` = '0', `item093_score` = '0', `item143_score` = '0', `item043_score` = '0', `user16_name` = 'user16', `user06_name` = 'user6', `user11_name` = 'user11', `user01_name` = 'user1', `item194_score` = '0', `item094_score` = '0', `item144_score` = '0', `item044_score` = '0', `item182_score` = '0', `item082_score` = '0', `item132_score` = '0', `item032_score` = '0', `item195_score` = '0', `item095_score` = '0', `item145_score` = '0', `item045_score` = '0', `item171_score` = '0', `item071_score` = '0', `item121_score` = '0', `item021_score` = '0', `item184_score` = '0', `item084_score` = '0', `item134_score` = '0', `item034_score` = '0', `item172_score` = '0', `item072_score` = '0', `item122_score` = '0', `item022_score` = '0', `item185_score` = '0', `item085_score` = '0', `item135_score` = '0', `item035_score` = '0', `item162_score` = '0', `item062_score` = '0', `item112_score` = '0', `item012_score` = '0', `item173_score` = '0', `item073_score` = '0', `item123_score` = '0', `item023_score` = '0', `item163_score` = '0', `item063_score` = '0'"
+sql_climbing_init01 = "UPDATE climbing_score SET `user01_name` = 'user01', `item011_score` = '0', `item012_score` = '0', `item013_score` = '0', `item014_score` = '0', `item015_score` = '0'"
+sql_climbing_init02 = "UPDATE climbing_score SET `user02_name` = 'user02', `item021_score` = '0', `item022_score` = '0', `item023_score` = '0', `item024_score` = '0', `item025_score` = '0'"
+sql_climbing_init03 = "UPDATE climbing_score SET `user03_name` = 'user03', `item031_score` = '0', `item032_score` = '0', `item033_score` = '0', `item034_score` = '0', `item035_score` = '0'"
+sql_climbing_init04 = "UPDATE climbing_score SET `user04_name` = 'user04', `item041_score` = '0', `item042_score` = '0', `item043_score` = '0', `item044_score` = '0', `item045_score` = '0'"
+sql_climbing_init05 = "UPDATE climbing_score SET `user05_name` = 'user05', `item051_score` = '0', `item052_score` = '0', `item053_score` = '0', `item054_score` = '0', `item055_score` = '0'"
+sql_climbing_init06 = "UPDATE climbing_score SET `user06_name` = 'user06', `item061_score` = '0', `item062_score` = '0', `item063_score` = '0', `item064_score` = '0', `item065_score` = '0'"
+sql_climbing_init07 = "UPDATE climbing_score SET `user07_name` = 'user07', `item071_score` = '0', `item072_score` = '0', `item073_score` = '0', `item074_score` = '0', `item075_score` = '0'"
+sql_climbing_init08 = "UPDATE climbing_score SET `user08_name` = 'user08', `item081_score` = '0', `item082_score` = '0', `item083_score` = '0', `item084_score` = '0', `item085_score` = '0'"
+sql_climbing_init09 = "UPDATE climbing_score SET `user09_name` = 'user09', `item091_score` = '0', `item092_score` = '0', `item093_score` = '0', `item094_score` = '0', `item095_score` = '0'"
+sql_climbing_init10 = "UPDATE climbing_score SET `user10_name` = 'user10', `item101_score` = '0', `item102_score` = '0', `item103_score` = '0', `item104_score` = '0', `item105_score` = '0'"
+sql_climbing_init11 = "UPDATE climbing_score SET `user11_name` = 'user11', `item111_score` = '0', `item112_score` = '0', `item113_score` = '0', `item114_score` = '0', `item115_score` = '0'"
+sql_climbing_init12 = "UPDATE climbing_score SET `user12_name` = 'user12', `item121_score` = '0', `item122_score` = '0', `item123_score` = '0', `item124_score` = '0', `item125_score` = '0'"
+sql_climbing_init13 = "UPDATE climbing_score SET `user13_name` = 'user13', `item131_score` = '0', `item132_score` = '0', `item133_score` = '0', `item134_score` = '0', `item135_score` = '0'"
+sql_climbing_init14 = "UPDATE climbing_score SET `user14_name` = 'user14', `item141_score` = '0', `item142_score` = '0', `item143_score` = '0', `item144_score` = '0', `item145_score` = '0'"
+sql_climbing_init15 = "UPDATE climbing_score SET `user15_name` = 'user15', `item151_score` = '0', `item152_score` = '0', `item153_score` = '0', `item154_score` = '0', `item155_score` = '0'"
+sql_climbing_init16 = "UPDATE climbing_score SET `user16_name` = 'user16', `item161_score` = '0', `item162_score` = '0', `item163_score` = '0', `item164_score` = '0', `item165_score` = '0'"
+sql_climbing_init17 = "UPDATE climbing_score SET `user17_name` = 'user17', `item171_score` = '0', `item172_score` = '0', `item173_score` = '0', `item174_score` = '0', `item175_score` = '0'"
+sql_climbing_init18 = "UPDATE climbing_score SET `user18_name` = 'user18', `item181_score` = '0', `item182_score` = '0', `item183_score` = '0', `item184_score` = '0', `item185_score` = '0'"
+sql_climbing_init19 = "UPDATE climbing_score SET `user19_name` = 'user19', `item191_score` = '0', `item192_score` = '0', `item193_score` = '0', `item194_score` = '0', `item195_score` = '0'"
+sql_climbing_init20 = "UPDATE climbing_score SET `user20_name` = 'user20', `item201_score` = '0', `item202_score` = '0', `item203_score` = '0', `item204_score` = '0', `item205_score` = '0'"
+
+
 
 sql_climbing_total_logtime_insert = "insert into climbing_score_total (log_time, log_name, log_phone, log_sex) VALUES (%s, %s, %s, %s)"  
 #sql_climbing_total_item1s_insert = "insert into climbing_score_total (log_name, log_item1_s) VALUES (%s, %s) where = %s" 
@@ -89,9 +111,9 @@ sql_climbing_total_item5s_insert = "UPDATE climbing_score_total SET log_item5_s=
 
 sql_climbing_total_item1f_insert = "UPDATE climbing_score_total SET log_item1_f=%s, log_item1_time = %s where log_time = %s and log_name=%s" 
 sql_climbing_total_item2f_insert = "UPDATE climbing_score_total SET log_item2_f=%s, log_item2_time = %s where log_time = %s and log_name=%s" 
-sql_climbing_total_item3f_insert = "UPDATE climbing_score_total SET log_item3_f=%s, log_item2_time = %s where log_time = %s and log_name=%s" 
-sql_climbing_total_item4f_insert = "UPDATE climbing_score_total SET log_item4_f=%s, log_item2_time = %s where log_time = %s and log_name=%s" 
-sql_climbing_total_item5f_insert = "UPDATE climbing_score_total SET log_item5_f=%s, log_item2_time = %s where log_time = %s and log_name=%s" 
+sql_climbing_total_item3f_insert = "UPDATE climbing_score_total SET log_item3_f=%s, log_item3_time = %s where log_time = %s and log_name=%s" 
+sql_climbing_total_item4f_insert = "UPDATE climbing_score_total SET log_item4_f=%s, log_item4_time = %s where log_time = %s and log_name=%s" 
+sql_climbing_total_item5f_insert = "UPDATE climbing_score_total SET log_item5_f=%s, log_item5_time = %s where log_time = %s and log_name=%s" 
 
 sql_climbing_user1_update = "update climbing_score set user01_name = %s"
 sql_climbing_user2_update = "update climbing_score set user02_name = %s"
@@ -750,7 +772,26 @@ if __name__ == "__main__" :
                 print('Button Pressed...')   
                 entryCnt = 0
                 dicTime.clear()
-                cursor.execute(sql_climbing_init) 
+                cursor.execute(sql_climbing_init01) 
+                cursor.execute(sql_climbing_init02)
+                cursor.execute(sql_climbing_init03)
+                cursor.execute(sql_climbing_init04)
+                cursor.execute(sql_climbing_init05)
+                cursor.execute(sql_climbing_init06)
+                cursor.execute(sql_climbing_init07)
+                cursor.execute(sql_climbing_init08)
+                cursor.execute(sql_climbing_init09)
+                cursor.execute(sql_climbing_init10)
+                cursor.execute(sql_climbing_init11)
+                cursor.execute(sql_climbing_init12)
+                cursor.execute(sql_climbing_init13)
+                cursor.execute(sql_climbing_init14)
+                cursor.execute(sql_climbing_init15)
+                cursor.execute(sql_climbing_init16)
+                cursor.execute(sql_climbing_init17)
+                cursor.execute(sql_climbing_init18)
+                cursor.execute(sql_climbing_init19)
+                cursor.execute(sql_climbing_init20)
                 board_db.commit()
 
                 
