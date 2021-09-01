@@ -23,6 +23,7 @@ exitThread = False
 entryCnt = 0
 midCnt = 0
 user_name = ""
+mid_user_name = ""
 user_phone = ""
 sex = 1
 
@@ -84,6 +85,7 @@ sql_sp_total_insert = "insert into sp_score_total (log_name, log_phone, log_time
 sql_sp_sum_insert = "insert into sp_score_rank (user_name, user_phone, log_time, sex, score_sum, tag_num, score, labtime) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"  
 
 sql_sp_score_left_update = "UPDATE sp_score_left SET log_name=%s, log_sp_cnt=%s, log_sp_score=%s, log_sp_time=%s" 
+sql_sp_score_mid_update = "UPDATE sp_score_mid2 SET log_name=%s, log_sp_cnt=%s, log_sp_score=%s, log_sp_time=%s" 
 sql_sp_score_right_update = "UPDATE sp_score_right SET log_name=%s, log_sp_cnt=%s, log_sp_score=%s, log_sp_time=%s" 
 
 sql_climbing_total_logtime_insert = "insert into climbing_score_total (log_time, log_name) VALUES (%s, %s)"  
@@ -285,7 +287,7 @@ def parsing_data(data):
         print('DataFrame is empty!')
         return
         
-    global user_name, user_phone, sex
+    global user_name, user_phone, sex, mid_user_name
     user_name = df.iloc[0,0]
     user_phone = df.iloc[0,1]
     sex = df.iloc[0,2]
@@ -338,6 +340,10 @@ def parsing_data(data):
         else:
             print("finish right")
             cursor.execute(sql_sp_score_right_update,(user_name, dicTagCnt[bandId], dicTagScore[bandId]+bonus,dicLabTime[bandId])) 
+
+        if(mid_user_name == user_name):
+            print("mid name clear", mid_user_name)
+            cursor.execute(sql_sp_score_mid_update,('', '0', '0','0')) 
         
         board_db.commit()   
 
@@ -385,35 +391,13 @@ def parsing_data(data):
             board_db.commit() 
         
 
-        if itemNo == '045' or itemNo == '046':
+        if itemNo == '045':
             #Mid No
-            global midCnt
-            midCnt +=1
-
-            if midCnt > 10:
-                midCnt = 1
-
-            if midCnt == 1:
-                cursor.execute(sql_mid_score_01_update,(user_name, dicTagCnt[bandId], dicLabTime[bandId])) 
-            elif midCnt == 2:
-                cursor.execute(sql_mid_score_02_update,(user_name, dicTagCnt[bandId], dicLabTime[bandId])) 
-            elif midCnt == 3:
-                cursor.execute(sql_mid_score_03_update,(user_name, dicTagCnt[bandId], dicLabTime[bandId])) 
-            elif midCnt == 4:
-                cursor.execute(sql_mid_score_04_update,(user_name, dicTagCnt[bandId], dicLabTime[bandId])) 
-            elif midCnt == 5:
-                cursor.execute(sql_mid_score_05_update,(user_name, dicTagCnt[bandId], dicLabTime[bandId]))         
-            elif midCnt == 6:
-                cursor.execute(sql_mid_score_06_update,(user_name, dicTagCnt[bandId], dicLabTime[bandId])) 
-            elif midCnt == 7:
-                cursor.execute(sql_mid_score_07_update,(user_name, dicTagCnt[bandId], dicLabTime[bandId]))  
-            elif midCnt == 8:
-                cursor.execute(sql_mid_score_08_update,(user_name, dicTagCnt[bandId], dicLabTime[bandId])) 
-            elif midCnt == 9:
-                cursor.execute(sql_mid_score_09_update,(user_name, dicTagCnt[bandId], dicLabTime[bandId])) 
-            elif midCnt == 10:
-                cursor.execute(sql_mid_score_10_update,(user_name, dicTagCnt[bandId], dicLabTime[bandId])) 
+            mid_user_name = user_name
+            print("mid check", mid_user_name)
+            cursor.execute(sql_sp_score_mid_update,(user_name, dicTagCnt[bandId], dicTagScore[bandId],dicLabTime[bandId])) 
             board_db.commit() 
+
 
 def readThread(ser):
     global line
@@ -427,7 +411,7 @@ def readThread(ser):
         for c in ser.read():
             rxcnt +=1
             if c==255:
-                print(rxcnt, c)
+                #print(rxcnt, c)
                 continue
 
             if c>=200:
