@@ -342,7 +342,7 @@ def parsing_data(data):
             cursor.execute(sql_sp_score_right_update,(user_name, dicTagCnt[bandId], dicTagScore[bandId]+bonus,dicLabTime[bandId])) 
 
         if(mid_user_name == user_name):
-            print("mid name clear", mid_user_name)
+            #print("mid name clear", mid_user_name)
             cursor.execute(sql_sp_score_mid_update,('', '0', '0','0')) 
         
         board_db.commit()   
@@ -394,7 +394,7 @@ def parsing_data(data):
         if itemNo == '045':
             #Mid No
             mid_user_name = user_name
-            print("mid check", mid_user_name)
+            print("mid check")
             cursor.execute(sql_sp_score_mid_update,(user_name, dicTagCnt[bandId], dicTagScore[bandId],dicLabTime[bandId])) 
             board_db.commit() 
 
