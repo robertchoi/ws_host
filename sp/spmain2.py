@@ -381,7 +381,6 @@ def parsing_data(data):
         print("LAB time", dicLabTime[bandId])
 
         global tag1_score, tag2_score, tag3_score, tag4_score
-
         if dicLabTime[bandId].total_seconds() < str2sec('00:05:00'):
             dicTagCnt[bandId] += 1
 
@@ -393,9 +392,7 @@ def parsing_data(data):
                 dicTagScore[bandId] = dicTagScore[bandId] + tag3_score
             else:
                 dicTagScore[bandId] = dicTagScore[bandId] + tag4_score
-            
             print("dicTagScore[bandId]", dicTagScore[bandId])
-            
             cursor.execute(sql_sp_total_insert,(user_name, user_phone, ct, startorfinish, itemNo)) 
             board_db.commit() 
         
@@ -425,7 +422,6 @@ def fetch_score():
     print("tag2_score", tag2_score)
     print("tag3_score", tag3_score)
     print("tag4_score", tag4_score)
-
 
 
 def readThread(ser):
@@ -470,13 +466,13 @@ def readThread(ser):
 
 
 if __name__ == "__main__" :
-    signal.signal(signal.SIGINT, handler)
+    #signal.signal(signal.SIGINT, handler)
 
-    ser = serial.Serial(port, baud, timeout=0)
+    #ser = serial.Serial(port, baud, timeout=0)
 
-    thread = threading.Thread(target=readThread, args=(ser,))
+    #thread = threading.Thread(target=readThread, args=(ser,))
 
     fetch_score()
 
 
-    thread.start()
+    #thread.start()
